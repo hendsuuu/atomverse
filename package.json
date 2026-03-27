@@ -1,0 +1,35 @@
+{
+    "$schema": "https://www.schemastore.org/package.json",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite"
+    },
+    "devDependencies": {
+        "@tailwindcss/vite": "^4.2.2",
+        "axios": "^1.11.0",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^3.0.0",
+        "tailwindcss": "^4.2.2",
+        "vite": "^8.0.0"
+    },
+    "dependencies": {
+        "@inertiajs/core": "^3.0.0",
+        "@inertiajs/react": "^3.0.0",
+        "@tiptap/extension-image": "^3.20.5",
+        "@tiptap/extension-underline": "^3.20.5",
+        "@tiptap/extension-youtube": "^3.20.5",
+        "@tiptap/pm": "^3.20.5",
+        "@tiptap/react": "^3.20.5",
+        "@tiptap/starter-kit": "^3.20.5",
+        "@types/dompurify": "^3.0.5",
+        "@types/react": "^19.2.14",
+        "@types/react-dom": "^19.2.3",
+        "@vitejs/plugin-react": "^6.0.1",
+        "dompurify": "^3.3.3",
+        "react": "^19.2.4",
+        "react-dom": "^19.2.4",
+        "typescript": "^6.0.2"
+    }
+}
