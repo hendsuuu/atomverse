@@ -24,7 +24,7 @@ export default function CoursesIndex({ courses, filters }: Props) {
 
             <div className="mb-6">
                 <h1 className="text-2xl font-bold text-surface-900 mb-1">My Courses</h1>
-                <p className="text-surface-500 text-sm">Browse your enrolled courses</p>
+                <p className="text-surface-500 text-sm">Browse all available courses</p>
             </div>
 
             <form onSubmit={handleSearch} className="mb-6 flex gap-3">

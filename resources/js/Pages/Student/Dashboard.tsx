@@ -31,7 +31,7 @@ export default function Dashboard({ enrolledCourses, totalEnrolled, quizScores, 
             <div className="rounded-2xl gradient-hero p-6 sm:p-8 mb-8 text-white">
                 <h1 className="text-2xl sm:text-3xl font-bold mb-2">Selamat Datang! 👋</h1>
                 <p className="text-white/80 text-sm sm:text-base">
-                    Kamu terdaftar di <span className="font-semibold text-white">{totalEnrolled} kelas</span>. Terus semangat belajar!
+                    Kamu memiliki akses ke <span className="font-semibold text-white">{totalEnrolled} kelas</span>. Terus semangat belajar!
                 </p>
             </div>
 
@@ -131,7 +131,7 @@ export default function Dashboard({ enrolledCourses, totalEnrolled, quizScores, 
                 </div>
             ) : (
                 <div className="card p-8 text-center">
-                    <p className="text-surface-500">Kamu belum terdaftar di kelas manapun.</p>
+                    <p className="text-surface-500">Belum ada kelas yang tersedia.</p>
                 </div>
             )}
         </AppLayout>

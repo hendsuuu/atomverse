@@ -8,7 +8,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment: atomverse
+    environment:
+      name: atomverse
 
     steps:
       - name: Checkout code
@@ -36,7 +37,9 @@ jobs:
         run: npm ci
 
       - name: Build frontend assets
-        run: npm run build
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+        run: npx vite build
 
       # ── Prepare deployment package ──
       - name: Prepare files for deployment
@@ -48,8 +51,21 @@ jobs:
           rm -rf .github
           rm -rf storage/logs/*.log
 
-      # ── Deploy via FTP/SFTP ──
-      - name: Deploy to shared hosting via SFTP
+      # ── Verify secrets are available ──
+      - name: Verify deployment secrets
+        run: |
+          if [ -z "${{ secrets.FTP_HOST }}" ]; then
+            echo "::error::FTP_HOST secret is not set in the 'atomverse' environment"
+            exit 1
+          fi
+          if [ -z "${{ secrets.FTP_USERNAME }}" ]; then
+            echo "::error::FTP_USERNAME secret is not set in the 'atomverse' environment"
+            exit 1
+          fi
+          echo "All required secrets are available"
+
+      # ── Deploy via FTP ──
+      - name: Deploy to shared hosting via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
@@ -73,8 +89,8 @@ jobs:
 
       # ── Post-deploy: Run migrations via SSH ──
       - name: Run post-deploy commands via SSH
-        uses: appleboy/ssh-action@v1.2.1
         if: ${{ secrets.SSH_HOST != '' }}
+        uses: appleboy/ssh-action@v1.2.1
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}

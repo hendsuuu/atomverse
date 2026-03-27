@@ -14,11 +14,6 @@ class MaterialController extends Controller
     {
         $user = auth()->user();
 
-        // Verify user is enrolled in the course
-        if (!$user->isEnrolledIn($material->course)) {
-            abort(403, 'You are not enrolled in this course.');
-        }
-
         $material->load([
             'course:id,title,slug',
             'sections' => fn ($q) => $q->orderBy('sort_order'),

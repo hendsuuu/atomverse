@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\ExamAttempt;
 use App\Models\QuizAttempt;
 use Illuminate\Support\Facades\Auth;
@@ -15,8 +16,8 @@ class HistoryController extends Controller
     {
         $user = Auth::user();
 
-        // Enrolled courses with material counts
-        $courses = $user->courses()
+        // All published courses
+        $courses = Course::published()
             ->withCount('materials')
             ->get()
             ->map(fn($course) => [

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\QuizAttempt;
 use Inertia\Inertia;
 
@@ -12,10 +13,9 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        $enrolledCourses = $user->courses()
-            ->published()
+        $enrolledCourses = Course::published()
             ->withCount('materials')
-            ->latest('course_user.enrolled_at')
+            ->latest('created_at')
             ->take(6)
             ->get();
 
@@ -50,7 +50,7 @@ class DashboardController extends Controller
 
         return Inertia::render('Student/Dashboard', [
             'enrolledCourses' => $enrolledCourses,
-            'totalEnrolled' => $user->courses()->count(),
+            'totalEnrolled' => Course::published()->count(),
             'quizScores' => $bestScores,
             'quizStats' => [
                 'total' => $totalQuizzes,

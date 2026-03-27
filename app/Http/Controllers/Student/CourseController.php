@@ -11,13 +11,10 @@ class CourseController extends Controller
 {
     public function index(Request $request)
     {
-        $user = auth()->user();
-
-        $courses = $user->courses()
-            ->published()
+        $courses = Course::published()
             ->withCount('materials')
             ->search($request->search)
-            ->latest('course_user.enrolled_at')
+            ->latest('created_at')
             ->paginate(12)
             ->withQueryString();
 
@@ -29,13 +26,6 @@ class CourseController extends Controller
 
     public function show(Course $course)
     {
-        $user = auth()->user();
-
-        // Verify enrollment
-        if (!$user->isEnrolledIn($course)) {
-            abort(403, 'You are not enrolled in this course.');
-        }
-
         $course->load([
             'materials' => fn ($q) => $q->published()->orderBy('sort_order')->withCount('quizzes'),
             'creator:id,name',
