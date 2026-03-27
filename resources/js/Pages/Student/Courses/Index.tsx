@@ -1,9 +1,9 @@
-import { Head, Link, router } from '@inertiajs/react';
-import { useState } from 'react';
-import AppLayout from '@/Layouts/AppLayout';
-import Pagination from '@/Components/Pagination';
-import EmptyState from '@/Components/EmptyState';
-import type { PaginatedData, Course } from '@/types';
+import { Head, Link, router } from "@inertiajs/react";
+import { useState } from "react";
+import AppLayout from "@/Layouts/AppLayout";
+import Pagination from "@/Components/Pagination";
+import EmptyState from "@/Components/EmptyState";
+import type { PaginatedData, Course } from "@/types";
 
 interface Props {
     courses: PaginatedData<Course & { materials_count: number }>;
@@ -11,11 +11,15 @@ interface Props {
 }
 
 export default function CoursesIndex({ courses, filters }: Props) {
-    const [search, setSearch] = useState(filters.search || '');
+    const [search, setSearch] = useState(filters.search || "");
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        router.get('/courses', { search }, { preserveState: true, replace: true });
+        router.get(
+            "/courses",
+            { search },
+            { preserveState: true, replace: true },
+        );
     };
 
     return (
@@ -23,8 +27,12 @@ export default function CoursesIndex({ courses, filters }: Props) {
             <Head title="My Courses" />
 
             <div className="mb-6">
-                <h1 className="text-2xl font-bold text-surface-900 mb-1">My Courses</h1>
-                <p className="text-surface-500 text-sm">Browse all available courses</p>
+                <h1 className="text-2xl font-bold text-surface-900 mb-1">
+                    My Courses
+                </h1>
+                <p className="text-surface-500 text-sm">
+                    Browse all available courses
+                </p>
             </div>
 
             <form onSubmit={handleSearch} className="mb-6 flex gap-3">
@@ -35,7 +43,9 @@ export default function CoursesIndex({ courses, filters }: Props) {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
-                <button type="submit" className="btn-secondary">Search</button>
+                <button type="submit" className="btn-secondary">
+                    Search
+                </button>
             </form>
 
             {courses.data.length > 0 ? (
@@ -49,8 +59,11 @@ export default function CoursesIndex({ courses, filters }: Props) {
                             >
                                 <div className="h-40 bg-gradient-to-br from-primary-500 to-accent-500 relative overflow-hidden">
                                     {course.thumbnail_url && (
-                                        <img src={course.thumbnail_url} alt={course.title}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                        <img
+                                            src={course.thumbnail_url}
+                                            alt={course.title}
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        />
                                     )}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                                 </div>
@@ -70,7 +83,12 @@ export default function CoursesIndex({ courses, filters }: Props) {
                             </Link>
                         ))}
                     </div>
-                    <Pagination links={courses.links} from={courses.from} to={courses.to} total={courses.total} />
+                    <Pagination
+                        links={courses.links}
+                        from={courses.from}
+                        to={courses.to}
+                        total={courses.total}
+                    />
                 </>
             ) : (
                 <EmptyState
