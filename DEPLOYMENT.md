@@ -25,6 +25,7 @@ Tutorial lengkap deploy **Atomverse** (Laravel 13 + Inertia + React) ke **Shared
 ## 1. Prasyarat
 
 ### Shared Hosting harus mendukung:
+
 - **PHP >= 8.3** (cek di cPanel → PHP Version)
 - **MySQL 8.0+** atau MariaDB 10.6+
 - **Composer** (biasanya sudah terinstall)
@@ -33,17 +34,19 @@ Tutorial lengkap deploy **Atomverse** (Laravel 13 + Inertia + React) ke **Shared
 - **Node.js** (opsional di server, karena kita build di CI)
 
 ### Tools yang dibutuhkan:
+
 - Akun GitHub (dengan repository `hendsuuu/atomverse`)
 - Domain: `atomversechemistry.site` (sudah dibeli)
 - Akun shared hosting (contoh: Niagahoster, Hostinger, Dewaweb, Namecheap, dll)
 
 ### Rekomendasi Hosting Indonesia yang support Laravel:
-| Hosting | SSH | PHP 8.3 | MySQL | Harga |
-|---------|-----|---------|-------|-------|
-| Niagahoster | ✅ | ✅ | ✅ | ~50rb/bln |
-| Hostinger | ✅ | ✅ | ✅ | ~30rb/bln |
-| Dewaweb | ✅ | ✅ | ✅ | ~50rb/bln |
-| Domainesia | ✅ | ✅ | ✅ | ~40rb/bln |
+
+| Hosting     | SSH | PHP 8.3 | MySQL | Harga     |
+| ----------- | --- | ------- | ----- | --------- |
+| Niagahoster | ✅  | ✅      | ✅    | ~50rb/bln |
+| Hostinger   | ✅  | ✅      | ✅    | ~30rb/bln |
+| Dewaweb     | ✅  | ✅      | ✅    | ~50rb/bln |
+| Domainesia  | ✅  | ✅      | ✅    | ~40rb/bln |
 
 ---
 
@@ -60,6 +63,7 @@ git remote add origin https://github.com/hendsuuu/atomverse.git
 ### 2.2 Pastikan `.gitignore` sudah benar
 
 File `.gitignore` sudah mengecualikan:
+
 - `.env` (jangan pernah push file ini!)
 - `node_modules/`
 - `vendor/`
@@ -81,6 +85,7 @@ git push -u origin main
 ### 3.1 Login ke cPanel
 
 Buka cPanel hosting kamu, biasanya di:
+
 ```
 https://atomversechemistry.site:2083
 atau
@@ -92,20 +97,20 @@ https://cpanel.atomversechemistry.site
 1. Di cPanel → **Select PHP Version** (atau **MultiPHP Manager**)
 2. Pilih PHP **8.3** untuk domain kamu
 3. Aktifkan extensions berikut:
-   - `bcmath`
-   - `ctype`
-   - `curl`
-   - `dom`
-   - `fileinfo`
-   - `gd`
-   - `json`
-   - `mbstring`
-   - `openssl`
-   - `pdo`
-   - `pdo_mysql`
-   - `tokenizer`
-   - `xml`
-   - `zip`
+    - `bcmath`
+    - `ctype`
+    - `curl`
+    - `dom`
+    - `fileinfo`
+    - `gd`
+    - `json`
+    - `mbstring`
+    - `openssl`
+    - `pdo`
+    - `pdo_mysql`
+    - `tokenizer`
+    - `xml`
+    - `zip`
 
 ### 3.3 Struktur Folder di Hosting
 
@@ -134,6 +139,7 @@ Shared hosting biasanya punya struktur:
 ### 3.4 Buat folder project
 
 Via SSH:
+
 ```bash
 cd ~
 mkdir atomverse
@@ -224,12 +230,14 @@ VITE_APP_NAME="Atomverse"
 ### 5.2 Generate App Key
 
 Via SSH:
+
 ```bash
 cd ~/atomverse
 php artisan key:generate
 ```
 
 Atau generate manual di lokal lalu copy-paste value `APP_KEY` ke `.env` server:
+
 ```bash
 # Di lokal
 php artisan key:generate --show
@@ -249,19 +257,19 @@ Arahkan nameserver domain ke hosting kamu.
 1. Login ke panel domain (Niagahoster/Namecheap/GoDaddy/dll)
 2. Cari pengaturan **Nameserver**
 3. Ganti ke nameserver hosting kamu, contoh:
-   ```
-   ns1.hostingprovider.com
-   ns2.hostingprovider.com
-   ```
-   (Cek email dari hosting untuk nameserver yang benar)
+    ```
+    ns1.hostingprovider.com
+    ns2.hostingprovider.com
+    ```
+    (Cek email dari hosting untuk nameserver yang benar)
 
 **Atau gunakan DNS Records (jika pakai Cloudflare/DNS pihak ke-3):**
 
-| Type | Name | Value | TTL |
-|------|------|-------|-----|
-| A | @ | `IP_SERVER_HOSTING` | 3600 |
-| A | www | `IP_SERVER_HOSTING` | 3600 |
-| CNAME | www | atomversechemistry.site | 3600 |
+| Type  | Name | Value                   | TTL  |
+| ----- | ---- | ----------------------- | ---- |
+| A     | @    | `IP_SERVER_HOSTING`     | 3600 |
+| A     | www  | `IP_SERVER_HOSTING`     | 3600 |
+| CNAME | www  | atomversechemistry.site | 3600 |
 
 > IP server bisa dilihat di cPanel → sidebar kanan → **Shared IP Address**
 
@@ -276,6 +284,7 @@ Arahkan nameserver domain ke hosting kamu.
 **Metode 1: Symlink (Recommended)**
 
 Via SSH:
+
 ```bash
 # Backup public_html asli
 mv ~/public_html ~/public_html_backup
@@ -322,6 +331,7 @@ $this->app->bind('path.public', fn() => base_path('../public_html'));
 ### 6.4 Tunggu Propagasi DNS
 
 DNS propagation memakan waktu **1-48 jam** (biasanya 1-4 jam). Cek status:
+
 - https://dnschecker.org/#A/atomversechemistry.site
 - https://www.whatsmydns.net/#A/atomversechemistry.site
 
@@ -375,29 +385,31 @@ Edit `bootstrap/app.php` atau buat middleware trusted proxies jika diperlukan. L
 
 ### 8.2 FTP Secrets (Wajib)
 
-| Secret Name | Contoh Value | Keterangan |
-|-------------|-------------|------------|
-| `FTP_HOST` | `atomversechemistry.site` | Hostname FTP server |
-| `FTP_USERNAME` | `username@atomversechemistry.site` | Username FTP |
-| `FTP_PASSWORD` | `ftp_password_kamu` | Password FTP |
-| `FTP_PORT` | `21` | Port FTP (21=FTP, 22=SFTP) |
-| `FTP_SERVER_DIR` | `/home/username/atomverse/` | Path tujuan di server |
+| Secret Name      | Contoh Value                       | Keterangan                 |
+| ---------------- | ---------------------------------- | -------------------------- |
+| `FTP_HOST`       | `atomversechemistry.site`          | Hostname FTP server        |
+| `FTP_USERNAME`   | `username@atomversechemistry.site` | Username FTP               |
+| `FTP_PASSWORD`   | `ftp_password_kamu`                | Password FTP               |
+| `FTP_PORT`       | `21`                               | Port FTP (21=FTP, 22=SFTP) |
+| `FTP_SERVER_DIR` | `/home/username/atomverse/`        | Path tujuan di server      |
 
 ### 8.3 SSH Secrets (Opsional, untuk migrasi otomatis)
 
-| Secret Name | Contoh Value | Keterangan |
-|-------------|-------------|------------|
-| `SSH_HOST` | `atomversechemistry.site` | Hostname SSH |
-| `SSH_USERNAME` | `username` | Username SSH (dari cPanel) |
-| `SSH_PASSWORD` | `cpanel_password` | Password SSH |
-| `SSH_PORT` | `22` | Port SSH |
-| `SSH_PROJECT_DIR` | `/home/username/atomverse` | Path project di server |
+| Secret Name       | Contoh Value               | Keterangan                 |
+| ----------------- | -------------------------- | -------------------------- |
+| `SSH_HOST`        | `atomversechemistry.site`  | Hostname SSH               |
+| `SSH_USERNAME`    | `username`                 | Username SSH (dari cPanel) |
+| `SSH_PASSWORD`    | `cpanel_password`          | Password SSH               |
+| `SSH_PORT`        | `22`                       | Port SSH                   |
+| `SSH_PROJECT_DIR` | `/home/username/atomverse` | Path project di server     |
 
 **Cara mendapatkan kredensial FTP:**
+
 1. cPanel → **FTP Accounts**
 2. Buat akun FTP baru atau gunakan main account
 
 **Cara mendapatkan kredensial SSH:**
+
 1. cPanel → **SSH Access** atau **Terminal**
 2. Pastikan SSH sudah diaktifkan (mungkin perlu minta ke support hosting)
 
@@ -419,17 +431,17 @@ npm run build
 Gunakan **FileZilla** atau FTP client lainnya:
 
 1. Connect ke server:
-   - Host: `atomversechemistry.site`
-   - Username: FTP username
-   - Password: FTP password
-   - Port: 21
+    - Host: `atomversechemistry.site`
+    - Username: FTP username
+    - Password: FTP password
+    - Port: 21
 
 2. Upload **semua file** ke `/home/username/atomverse/` **KECUALI:**
-   - `.env` (sudah dibuat manual di server)
-   - `node_modules/` (tidak perlu)
-   - `.git/` (tidak perlu)
-   - `tests/` (tidak perlu)
-   - `storage/logs/` (biarkan kosong)
+    - `.env` (sudah dibuat manual di server)
+    - `node_modules/` (tidak perlu)
+    - `.git/` (tidak perlu)
+    - `tests/` (tidak perlu)
+    - `storage/logs/` (biarkan kosong)
 
 3. Upload isi `public/` ke document root (`public_html/` atau sesuai setup)
 
@@ -482,6 +494,7 @@ Setelah deploy pertama berhasil, setiap `git push` ke branch `main` akan otomati
 ### 10.1 Workflow File
 
 File sudah dibuat di `.github/workflows/deploy.yml`. Workflow ini:
+
 1. ✅ Checkout kode
 2. ✅ Install PHP dependencies (tanpa dev)
 3. ✅ Install NPM & build frontend assets
@@ -582,7 +595,7 @@ php artisan event:cache
 # Pastikan storage & cache writable
 chmod -R 775 storage
 chmod -R 775 bootstrap/cache
-chown -R www-data:www-data storage bootstrap/cache  
+chown -R www-data:www-data storage bootstrap/cache
 # atau chown sesuai user hosting
 ```
 
@@ -632,6 +645,7 @@ php artisan tinker
 ```
 
 Pastikan:
+
 - DB_HOST biasanya `localhost` di shared hosting
 - Nama database lengkap (termasuk prefix username)
 - User sudah punya privileges
@@ -662,6 +676,7 @@ find ~/atomverse/bootstrap/cache -type d -exec chmod 775 {} \;
 ### Mixed Content Warning (HTTP/HTTPS)
 
 Tambahkan di `AppServiceProvider.php` boot():
+
 ```php
 if (config('app.env') === 'production') {
     \Illuminate\Support\Facades\URL::forceScheme('https');
