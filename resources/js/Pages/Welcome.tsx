@@ -1,306 +1,1169 @@
+import React, { useEffect, useRef, useState } from "react";
 import { Head, Link } from "@inertiajs/react";
 
 export default function Welcome() {
+    const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
+    const toggleFaq = (index: number) => {
+        setOpenFaqIndex((prevIndex) => (prevIndex === index ? null : index));
+    };
+
+    const glowRefs = useRef<(SVGCircleElement | null)[]>([null, null, null]);
+    const dotRefs = useRef<(SVGCircleElement | null)[]>([null, null, null]);
+    const coreRefs = useRef<(SVGCircleElement | null)[]>([null, null, null]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.1 }
+        );
+
+        const elements = document.querySelectorAll(".reveal");
+        elements.forEach((el) => observer.observe(el));
+
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        let animationFrameId: number;
+
+        const CX = 210,
+            CY = 185,
+            A = 178,
+            B = 60;
+        const D2R = Math.PI / 180;
+
+        const orbitDefs = [
+            [0, 0, +0.022],
+            [60, (2 * Math.PI) / 3, -0.016],
+            [-60, (4 * Math.PI) / 3, +0.019],
+        ];
+
+        const phases = orbitDefs.map((o) => o[1] as number);
+        const speeds = orbitDefs.map((o) => o[2] as number);
+        const angles = orbitDefs.map((o) => o[0] as number);
+
+        const position = (t: number, angleDeg: number) => {
+            const theta = angleDeg * D2R;
+            const cosT = Math.cos(t),
+                sinT = Math.sin(t);
+            const cosTheta = Math.cos(theta),
+                sinTheta = Math.sin(theta);
+
+            return [
+                CX + A * cosT * cosTheta - B * sinT * sinTheta,
+                CY + A * cosT * sinTheta + B * sinT * cosTheta,
+            ];
+        };
+
+        const tick = () => {
+            for (let i = 0; i < 3; i++) {
+                phases[i] += speeds[i];
+                const [x, y] = position(phases[i], angles[i]);
+
+                if (glowRefs.current[i]) {
+                    glowRefs.current[i]!.setAttribute("cx", x.toString());
+                    glowRefs.current[i]!.setAttribute("cy", y.toString());
+                }
+                if (dotRefs.current[i]) {
+                    dotRefs.current[i]!.setAttribute("cx", x.toString());
+                    dotRefs.current[i]!.setAttribute("cy", y.toString());
+                }
+                if (coreRefs.current[i]) {
+                    coreRefs.current[i]!.setAttribute("cx", x.toString());
+                    coreRefs.current[i]!.setAttribute("cy", y.toString());
+                }
+            }
+
+            animationFrameId = requestAnimationFrame(tick);
+        };
+
+        animationFrameId = requestAnimationFrame(tick);
+
+        return () => cancelAnimationFrame(animationFrameId);
+    }, []);
+
+    const faqs = [
+        {
+            q: "Apakah saya perlu latar belakang sains untuk mendaftar?",
+            a: "Tidak sama sekali! AtomVerse dirancang untuk semua tingkat — dari pemula yang belum pernah belajar sains hingga pelajar yang ingin memperdalam pengetahuan mereka. Kurikulum kami dimulai dari konsep paling dasar secara bertahap.",
+        },
+        {
+            q: "Bagaimana format pembelajaran di AtomVerse?",
+            a: "Pembelajaran dilakukan secara online, fleksibel sesuai waktu kamu. Terdiri dari video materi HD, modul baca interaktif, kuis, dan sesi live mentoring bersama instruktur berpengalaman setiap bulannya.",
+        },
+        {
+            q: "Apakah bisa belajar dari perangkat mobile?",
+            a: "Tentu! Platform AtomVerse sepenuhnya responsif dan dapat diakses dari smartphone, tablet, maupun laptop. Kamu juga bisa mengunduh materi untuk belajar secara offline.",
+        },
+    ];
+
     return (
         <>
             <Head title="Atomverse — Modern Learning Platform" />
 
-            <div className="min-h-screen bg-white">
-                {/* Navigation */}
-                <header className="fixed top-0 inset-x-0 z-50 bg-white/80 backdrop-blur-lg border-b border-surface-100">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex items-center justify-between h-16">
-                            <div className="flex items-center gap-2.5">
-                                <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center shadow-md shadow-primary-500/20">
-                                    <span className="text-white font-bold text-sm">
-                                        A
-                                    </span>
-                                </div>
-                                <span className="font-bold text-xl text-surface-900 tracking-tight">
-                                    Atomverse
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <Link
-                                    href="/login"
-                                    className="btn-ghost btn-sm"
+            <div className="overflow-x-hidden bg-white font-sans text-[#07182E] antialiased">
+                <style>
+                    {`
+                        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+                        .font-fraunces { font-family: 'Fraunces', serif; }
+                        .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+                        .bg-dot-grid {
+                            background-image: radial-gradient(#C6DFF6 1.4px, transparent 1.4px);
+                            background-size: 26px 26px;
+                        }
+
+                        @keyframes pulse-blink {
+                            0%, 100% { opacity: 1; }
+                            50% { opacity: 0.3; }
+                        }
+
+                        .animate-pulse-slow {
+                            animation: pulse-blink 2s ease-in-out infinite;
+                        }
+
+                        .reveal {
+                            opacity: 0;
+                            transform: translateY(28px);
+                            transition: opacity 0.6s ease, transform 0.6s ease;
+                        }
+
+                        .reveal.visible {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+
+                        html {
+                            scroll-behavior: smooth;
+                        }
+                    `}
+                </style>
+
+                {/* NAVBAR */}
+                <header className="fixed inset-x-0 top-0 z-50 border-b border-[#C6DFF6] bg-white/95 backdrop-blur-md">
+                    <div className="mx-auto flex h-[68px] max-w-[1220px] items-center justify-between gap-6 px-5">
+                        <a
+                            href="#home"
+                            className="flex items-center gap-2.5 text-[#082544]"
+                        >
+                            <svg
+                                className="h-[38px] w-[38px] shrink-0"
+                                viewBox="0 0 42 42"
+                                fill="none"
+                            >
+                                <ellipse
+                                    cx="21"
+                                    cy="21"
+                                    rx="19"
+                                    ry="7"
+                                    stroke="#1B7FE8"
+                                    strokeWidth="1.7"
+                                />
+                                <ellipse
+                                    cx="21"
+                                    cy="21"
+                                    rx="19"
+                                    ry="7"
+                                    stroke="#1B7FE8"
+                                    strokeWidth="1.7"
+                                    transform="rotate(60 21 21)"
+                                />
+                                <ellipse
+                                    cx="21"
+                                    cy="21"
+                                    rx="19"
+                                    ry="7"
+                                    stroke="#1B7FE8"
+                                    strokeWidth="1.7"
+                                    transform="rotate(-60 21 21)"
+                                />
+                                <circle cx="21" cy="21" r="4.5" fill="#082544" />
+                                <circle
+                                    cx="19.5"
+                                    cy="20"
+                                    r="2.5"
+                                    fill="#1B7FE8"
+                                    opacity=".85"
+                                />
+                                <circle
+                                    cx="22.5"
+                                    cy="22"
+                                    r="2.5"
+                                    fill="#38ADEE"
+                                    opacity=".85"
+                                />
+                            </svg>
+
+                            <span className="font-fraunces text-xl font-extrabold tracking-tight">
+                                Atom
+                                <em className="not-italic text-[#1B7FE8]">
+                                    verse
+                                </em>
+                            </span>
+                        </a>
+
+                        <ul className="hidden list-none gap-7 md:flex">
+                            <li>
+                                <a
+                                    href="#home"
+                                    className="text-[0.875rem] font-semibold text-[#3E546A] transition-colors hover:text-[#1B7FE8]"
                                 >
-                                    Sign in
-                                </Link>
-                                <Link
-                                    href="/register"
-                                    className="btn-primary btn-sm"
+                                    Home
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="#visi-misi"
+                                    className="text-[0.875rem] font-semibold text-[#3E546A] transition-colors hover:text-[#1B7FE8]"
                                 >
-                                    Get Started
-                                </Link>
-                            </div>
+                                    Visi Misi
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="#alur-belajar"
+                                    className="text-[0.875rem] font-semibold text-[#3E546A] transition-colors hover:text-[#1B7FE8]"
+                                >
+                                    Alur Belajar
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="#overview-materi"
+                                    className="text-[0.875rem] font-semibold text-[#3E546A] transition-colors hover:text-[#1B7FE8]"
+                                >
+                                    Overview Materi
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="#faq"
+                                    className="text-[0.875rem] font-semibold text-[#3E546A] transition-colors hover:text-[#1B7FE8]"
+                                >
+                                    FAQ
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div className="flex items-center gap-3">
+                            <Link
+                                href="/login"
+                                className="hidden rounded-lg border border-[#D6E3F5] px-4 py-2 text-[0.88rem] font-semibold text-[#082544] transition-all hover:border-[#1B7FE8] hover:text-[#1B7FE8] sm:inline-flex"
+                            >
+                                Sign in
+                            </Link>
+
+                            <Link
+                                href="/register"
+                                className="inline-flex items-center justify-center rounded-lg border-2 border-[#1B7FE8] bg-[#1B7FE8] px-[22px] py-[10px] text-[0.85rem] font-bold text-white transition-all duration-150 hover:-translate-y-0.5 hover:border-[#0D5CB3] hover:bg-[#0D5CB3] hover:shadow-[0_6px_20px_rgba(27,127,232,0.3)]"
+                            >
+                                Get Started
+                            </Link>
                         </div>
                     </div>
                 </header>
 
-                {/* Hero Section */}
-                <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-28 overflow-hidden">
-                    {/* Background decorations */}
-                    <div className="absolute inset-0 pointer-events-none">
-                        <div className="absolute -top-24 -right-24 w-[500px] h-[500px] bg-primary-100/40 rounded-full blur-3xl" />
-                        <div className="absolute top-1/2 -left-32 w-[400px] h-[400px] bg-accent-400/15 rounded-full blur-3xl" />
-                        <div className="absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-primary-200/20 rounded-full blur-3xl" />
-                    </div>
+                {/* HERO */}
+                <section
+                    id="home"
+                    className="relative min-h-screen overflow-hidden bg-white pt-[68px]"
+                >
+                    <div className="pointer-events-none absolute inset-0 bg-dot-grid opacity-45 [clip-path:inset(0_0_0_50%)]"></div>
 
-                    <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-50 text-primary-700 text-sm font-medium mb-8 border border-primary-100">
-                            <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                                />
-                            </svg>
-                            Platform Pembelajaran Interaktif
-                        </div>
+                    <div className="relative z-10 mx-auto grid min-h-[calc(100vh-68px)] w-full max-w-[1280px] grid-cols-1 items-center gap-10 px-5 md:grid-cols-2">
+                        <div className="reveal py-[60px] md:py-[40px]">
+                            <div className="mb-[22px] inline-flex items-center gap-2 rounded bg-[#EAF4FF] px-3.5 py-1.5 text-[0.78rem] font-bold uppercase tracking-wider text-[#1B7FE8]">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#1B7FE8] animate-pulse-slow"></span>
+                                Platform Pembelajaran Sains #1
+                            </div>
 
-                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-surface-900 leading-tight tracking-tight">
-                            Jelajahi Dunia Sains
-                            <br />
-                            <span className="text-gradient">
-                                Bersama Atomverse
-                            </span>
-                        </h1>
+                            <h1 className="font-fraunces mb-5 text-[clamp(2.3rem,4.2vw,3.6rem)] font-extrabold leading-[1.15] text-[#082544]">
+                                Jelajahi Dunia
+                                <br />
+                                <em className="not-italic text-[#1B7FE8]">Atom</em>, Kuasai
+                                <br />
+                                Ilmu Sains
+                            </h1>
 
-                        <p className="mt-6 text-lg sm:text-xl text-surface-500 max-w-2xl mx-auto leading-relaxed">
-                            Platform pembelajaran kimia modern dengan materi
-                            interaktif, kuis seru, dan visualisasi yang membantu
-                            kamu memahami konsep sains dengan lebih mudah dan
-                            menyenangkan.
-                        </p>
-
-                        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-                            <Link
-                                href="/register"
-                                className="btn-primary btn-lg shadow-lg shadow-primary-500/25 w-full sm:w-auto"
-                            >
-                                <svg
-                                    className="w-5 h-5"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M13 7l5 5m0 0l-5 5m5-5H6"
-                                    />
-                                </svg>
-                                Mulai Belajar Gratis
-                            </Link>
-                            <Link
-                                href="/login"
-                                className="btn-secondary btn-lg w-full sm:w-auto"
-                            >
-                                Sudah punya akun? Masuk
-                            </Link>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Features Section */}
-                <section className="py-20 bg-surface-50">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="text-center mb-16">
-                            <h2 className="text-3xl sm:text-4xl font-bold text-surface-900">
-                                Cara Belajar di Atomverse
-                            </h2>
-                            <p className="mt-4 text-surface-500 text-lg max-w-xl mx-auto">
-                                Tiga langkah mudah untuk memulai perjalanan
-                                belajarmu
+                            <p className="mb-9 max-w-[500px] text-[1.02rem] leading-relaxed text-[#3E546A]">
+                                AtomVerse menghadirkan pengalaman belajar yang interaktif,
+                                terstruktur, dan menyenangkan — dirancang khusus untuk
+                                membantumu memahami ilmu sains dari dasar hingga mahir.
                             </p>
-                        </div>
 
-                        <div className="grid md:grid-cols-3 gap-8">
-                            <FeatureCard
-                                step={1}
-                                title="Pilih Kursus"
-                                description="Pilih materi yang ingin kamu pelajari dari koleksi kursus kimia kami yang lengkap dan terstruktur."
-                                icon={
-                                    <svg
-                                        className="w-6 h-6"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={1.5}
-                                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                                        />
-                                    </svg>
-                                }
-                            />
-                            <FeatureCard
-                                step={2}
-                                title="Baca Materi"
-                                description="Pelajari materi interaktif dengan gambar, callout, dan visualisasi yang membantu pemahaman."
-                                icon={
-                                    <svg
-                                        className="w-6 h-6"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={1.5}
-                                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                                        />
-                                    </svg>
-                                }
-                            />
-                            <FeatureCard
-                                step={3}
-                                title="Kerjakan Kuis"
-                                description="Uji pemahamanmu dengan kuis pilihan ganda dan drag & drop yang interaktif dan menyenangkan."
-                                icon={
-                                    <svg
-                                        className="w-6 h-6"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={1.5}
-                                            d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-                                        />
-                                    </svg>
-                                }
-                            />
-                        </div>
-                    </div>
-                </section>
-
-                {/* Stats Section */}
-                <section className="py-20 bg-white">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                            <StatCard value="100+" label="Materi Interaktif" />
-                            <StatCard value="50+" label="Kuis & Game" />
-                            <StatCard value="1000+" label="Siswa Aktif" />
-                            <StatCard value="4.9" label="Rating Pengguna" />
-                        </div>
-                    </div>
-                </section>
-
-                {/* CTA Section */}
-                <section className="py-20 relative overflow-hidden">
-                    <div className="absolute inset-0 gradient-primary opacity-95" />
-                    <div className="absolute inset-0 pointer-events-none">
-                        <div className="absolute top-0 left-1/4 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-                        <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-white/5 rounded-full blur-3xl" />
-                    </div>
-
-                    <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                        <h2 className="text-3xl sm:text-4xl font-bold text-white">
-                            Siap Memulai Petualangan Belajar?
-                        </h2>
-                        <p className="mt-4 text-lg text-blue-100 max-w-xl mx-auto">
-                            Bergabunglah dengan ribuan siswa lainnya yang sudah
-                            merasakan pengalaman belajar sains yang menyenangkan
-                            di Atomverse.
-                        </p>
-                        <div className="mt-8">
-                            <Link
-                                href="/register"
-                                className="inline-flex items-center gap-2 px-8 py-3 bg-white text-primary-700 font-semibold rounded-xl shadow-lg hover:shadow-xl hover:bg-blue-50 transition-all text-base"
-                            >
-                                Daftar Sekarang — Gratis!
-                                <svg
-                                    className="w-5 h-5"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
+                            <div className="mb-12 flex flex-wrap gap-3.5">
+                                <Link
+                                    href="/register"
+                                    className="inline-block rounded border-2 border-[#1B7FE8] bg-[#1B7FE8] px-7 py-3 text-[0.9rem] font-bold text-white transition-all duration-150 hover:-translate-y-0.5 hover:border-[#0D5CB3] hover:bg-[#0D5CB3] hover:shadow-[0_6px_20px_rgba(27,127,232,0.3)]"
                                 >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M13 7l5 5m0 0l-5 5m5-5H6"
-                                    />
-                                </svg>
-                            </Link>
-                        </div>
-                    </div>
-                </section>
+                                    Mulai Belajar Gratis
+                                </Link>
 
-                {/* Footer */}
-                <footer className="bg-surface-900 py-12">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                            <div className="flex items-center gap-2.5">
-                                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-                                    <span className="text-white font-bold text-sm">
-                                        A
+                                <a
+                                    href="#overview-materi"
+                                    className="inline-block rounded border-2 border-[#C8D8E8] bg-transparent px-7 py-3 text-[0.9rem] font-bold text-[#07182E] transition-all duration-150 hover:-translate-y-0.5 hover:border-[#1B7FE8] hover:text-[#1B7FE8]"
+                                >
+                                    Lihat Materi →
+                                </a>
+                            </div>
+
+                            <div className="flex flex-wrap">
+                                <div className="flex flex-col pr-7 md:border-r md:border-[#C8D8E8]">
+                                    <span className="font-fraunces text-[1.65rem] font-bold leading-none text-[#082544]">
+                                        12K+
+                                    </span>
+                                    <span className="mt-1 text-[0.78rem] font-semibold text-[#7A90A8]">
+                                        Pelajar Aktif
                                     </span>
                                 </div>
-                                <span className="font-bold text-lg text-white tracking-tight">
-                                    Atomverse
-                                </span>
+
+                                <div className="flex flex-col px-0 pt-4 md:border-r md:border-[#C8D8E8] md:px-7 md:pt-0">
+                                    <span className="font-fraunces text-[1.65rem] font-bold leading-none text-[#082544]">
+                                        48
+                                    </span>
+                                    <span className="mt-1 text-[0.78rem] font-semibold text-[#7A90A8]">
+                                        Modul Materi
+                                    </span>
+                                </div>
+
+                                <div className="flex flex-col px-0 pt-4 md:px-7 md:pt-0">
+                                    <span className="font-fraunces text-[1.65rem] font-bold leading-none text-[#082544]">
+                                        4.9★
+                                    </span>
+                                    <span className="mt-1 text-[0.78rem] font-semibold text-[#7A90A8]">
+                                        Rating Platform
+                                    </span>
+                                </div>
                             </div>
-                            <p className="text-surface-400 text-sm">
-                                &copy; {new Date().getFullYear()} Atomverse. All
-                                rights reserved.
+                        </div>
+
+                       <div
+                            className="reveal relative h-[calc(100vh-68px)]"
+                            style={{ transitionDelay: "0.15s" }}
+                        >
+                            <div className="absolute bottom-0 right-[20px] h-[620px] w-[620px] rounded-full bg-[#DDE9FF] opacity-90"></div>
+                            <div className="absolute bottom-[36px] right-[58px] h-[500px] w-[500px] rounded-full border-[30px] border-[#C8D8FA] opacity-80"></div>
+
+                            <div className="absolute inset-x-0 bottom-0 flex h-full items-end justify-center">
+                                <img
+                                    src="/hero.png"
+                                    alt="Pelajar wanita tersenyum"
+                                    className="block h-full w-auto max-w-none object-contain object-bottom"
+                                    onError={(e) => {
+                                        (e.target as HTMLImageElement).src =
+                                            "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=80";
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* WHAT IS ATOM */}
+                <section id="atom" className="bg-[#EAF4FF] px-5 py-[96px]">
+                    <div className="mx-auto grid max-w-[1220px] grid-cols-1 items-center gap-[80px] md:grid-cols-2">
+                        <div className="reveal">
+                            <span className="mb-3.5 inline-block rounded bg-[#EAF4FF] px-3 py-1.5 text-[0.72rem] font-bold uppercase tracking-wider text-[#1B7FE8]">
+                                Pengetahuan Dasar
+                            </span>
+
+                            <h2 className="font-fraunces mb-3.5 text-[clamp(1.85rem,3vw,2.7rem)] leading-[1.15] text-[#082544]">
+                                Apa Itu Atom?
+                            </h2>
+
+                            <p className="text-[0.97rem] leading-[1.75] text-[#3E546A]">
+                                Atom adalah unit terkecil dari materi yang masih
+                                mempertahankan sifat kimia suatu unsur. Kata{" "}
+                                <em className="italic">atom</em> berasal dari
+                                bahasa Yunani{" "}
+                                <strong className="font-bold">atomos</strong> —
+                                berarti "tidak dapat dibagi."
                             </p>
+
+                            <br />
+
+                            <p className="text-[0.97rem] leading-[1.75] text-[#3E546A]">
+                                Setiap atom memiliki{" "}
+                                <strong className="font-bold">
+                                    inti (nukleus)
+                                </strong>{" "}
+                                yang tersusun dari proton dan neutron, serta
+                                dikelilingi oleh{" "}
+                                <strong className="font-bold">elektron</strong>{" "}
+                                yang bergerak dalam lapisan-lapisan kulit atom
+                                dengan tingkat energi berbeda.
+                            </p>
+
+                            <div className="mt-9 grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+                                <div className="rounded-lg border border-[#C6DFF6] bg-white p-5 transition-shadow hover:shadow-[0_4px_20px_rgba(27,127,232,0.1)]">
+                                    <div className="mb-2.5 text-[1.4rem]">🔵</div>
+                                    <h4 className="mb-1 text-[0.875rem] font-bold text-[#082544]">
+                                        Proton
+                                    </h4>
+                                    <p className="text-[0.8rem] leading-relaxed text-[#3E546A]">
+                                        Partikel bermuatan positif di dalam inti
+                                        atom. Jumlahnya menentukan nomor atom
+                                        suatu unsur.
+                                    </p>
+                                </div>
+
+                                <div className="rounded-lg border border-[#C6DFF6] bg-white p-5 transition-shadow hover:shadow-[0_4px_20px_rgba(27,127,232,0.1)]">
+                                    <div className="mb-2.5 text-[1.4rem]">⚪</div>
+                                    <h4 className="mb-1 text-[0.875rem] font-bold text-[#082544]">
+                                        Neutron
+                                    </h4>
+                                    <p className="text-[0.8rem] leading-relaxed text-[#3E546A]">
+                                        Partikel netral di dalam inti atom.
+                                        Berperan menjaga kestabilan inti atom.
+                                    </p>
+                                </div>
+
+                                <div className="rounded-lg border border-[#C6DFF6] bg-white p-5 transition-shadow hover:shadow-[0_4px_20px_rgba(27,127,232,0.1)]">
+                                    <div className="mb-2.5 text-[1.4rem]">🟡</div>
+                                    <h4 className="mb-1 text-[0.875rem] font-bold text-[#082544]">
+                                        Elektron
+                                    </h4>
+                                    <p className="text-[0.8rem] leading-relaxed text-[#3E546A]">
+                                        Partikel bermuatan negatif yang
+                                        mengorbit inti dalam lapisan kulit
+                                        energi.
+                                    </p>
+                                </div>
+
+                                <div className="rounded-lg border border-[#C6DFF6] bg-white p-5 transition-shadow hover:shadow-[0_4px_20px_rgba(27,127,232,0.1)]">
+                                    <div className="mb-2.5 text-[1.4rem]">🔬</div>
+                                    <h4 className="mb-1 text-[0.875rem] font-bold text-[#082544]">
+                                        Kulit Atom
+                                    </h4>
+                                    <p className="text-[0.8rem] leading-relaxed text-[#3E546A]">
+                                        Lapisan orbital tempat elektron
+                                        berpindah dan memancarkan atau menyerap
+                                        energi.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            className="reveal flex flex-col items-center gap-5"
+                            style={{ transitionDelay: "0.12s" }}
+                        >
+                            <svg
+                                viewBox="0 0 420 380"
+                                className="w-full max-w-[420px]"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <circle
+                                    cx="210"
+                                    cy="185"
+                                    r="145"
+                                    fill="#C6DFF6"
+                                    opacity=".14"
+                                />
+
+                                <ellipse
+                                    cx="210"
+                                    cy="185"
+                                    rx="178"
+                                    ry="60"
+                                    fill="none"
+                                    stroke="#A8CCE8"
+                                    strokeWidth="1.6"
+                                    strokeDasharray="6 4"
+                                />
+                                <ellipse
+                                    cx="210"
+                                    cy="185"
+                                    rx="178"
+                                    ry="60"
+                                    fill="none"
+                                    stroke="#A8CCE8"
+                                    strokeWidth="1.6"
+                                    strokeDasharray="6 4"
+                                    transform="rotate(60 210 185)"
+                                />
+                                <ellipse
+                                    cx="210"
+                                    cy="185"
+                                    rx="178"
+                                    ry="60"
+                                    fill="none"
+                                    stroke="#A8CCE8"
+                                    strokeWidth="1.6"
+                                    strokeDasharray="6 4"
+                                    transform="rotate(-60 210 185)"
+                                />
+
+                                <circle cx="210" cy="185" r="36" fill="#082544" />
+                                <circle
+                                    cx="201"
+                                    cy="177"
+                                    r="12"
+                                    fill="#1B7FE8"
+                                    opacity=".92"
+                                />
+                                <circle
+                                    cx="219"
+                                    cy="177"
+                                    r="12"
+                                    fill="#0D5CB3"
+                                    opacity=".92"
+                                />
+                                <circle
+                                    cx="210"
+                                    cy="195"
+                                    r="12"
+                                    fill="#38ADEE"
+                                    opacity=".92"
+                                />
+                                <text
+                                    x="210"
+                                    y="248"
+                                    textAnchor="middle"
+                                    className="fill-[#7A90A8] text-[11px] font-semibold tracking-widest"
+                                >
+                                    NUKLEUS
+                                </text>
+
+                                <g>
+                                    <circle
+                                        ref={(el) => {
+                                            glowRefs.current[0] = el;
+                                        }}
+                                        r="15"
+                                        fill="#1B7FE8"
+                                        opacity=".15"
+                                    />
+                                    <circle
+                                        ref={(el) => {
+                                            dotRefs.current[0] = el;
+                                        }}
+                                        r="10"
+                                        fill="#1B7FE8"
+                                    />
+                                    <circle
+                                        ref={(el) => {
+                                            coreRefs.current[0] = el;
+                                        }}
+                                        r="5"
+                                        fill="#90D4FF"
+                                    />
+                                </g>
+
+                                <g>
+                                    <circle
+                                        ref={(el) => {
+                                            glowRefs.current[1] = el;
+                                        }}
+                                        r="15"
+                                        fill="#38ADEE"
+                                        opacity=".15"
+                                    />
+                                    <circle
+                                        ref={(el) => {
+                                            dotRefs.current[1] = el;
+                                        }}
+                                        r="10"
+                                        fill="#38ADEE"
+                                    />
+                                    <circle
+                                        ref={(el) => {
+                                            coreRefs.current[1] = el;
+                                        }}
+                                        r="5"
+                                        fill="#B8E8FF"
+                                    />
+                                </g>
+
+                                <g>
+                                    <circle
+                                        ref={(el) => {
+                                            glowRefs.current[2] = el;
+                                        }}
+                                        r="15"
+                                        fill="#0D5CB3"
+                                        opacity=".15"
+                                    />
+                                    <circle
+                                        ref={(el) => {
+                                            dotRefs.current[2] = el;
+                                        }}
+                                        r="10"
+                                        fill="#0D5CB3"
+                                    />
+                                    <circle
+                                        ref={(el) => {
+                                            coreRefs.current[2] = el;
+                                        }}
+                                        r="5"
+                                        fill="#7FB8E8"
+                                    />
+                                </g>
+                            </svg>
+
+                            <div className="w-full max-w-[420px] overflow-hidden rounded-lg border-2 border-[#C6DFF6]">
+                                <img
+                                    src="https://images.unsplash.com/photo-1532094349884-543559c4c0f0?w=700&q=80"
+                                    alt="Laboratorium kimia"
+                                    className="h-[200px] w-full object-cover"
+                                    onError={(e) => {
+                                        (
+                                            e.target as HTMLImageElement
+                                        ).src =
+                                            "https://images.unsplash.com/photo-1628595351029-c2bf17511435?w=700&q=80";
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* VISI MISI */}
+                <section id="visi-misi" className="bg-white px-5 py-[96px]">
+                    <div className="mx-auto max-w-[1220px]">
+                        <div className="reveal mb-14">
+                            <span className="mb-3.5 inline-block rounded bg-[#EAF4FF] px-3 py-1.5 text-[0.72rem] font-bold uppercase tracking-wider text-[#1B7FE8]">
+                                Tujuan Kami
+                            </span>
+                            <h2 className="font-fraunces mb-3.5 text-[clamp(1.85rem,3vw,2.7rem)] leading-[1.15] text-[#082544]">
+                                Visi &amp; Misi AtomVerse
+                            </h2>
+                            <p className="max-w-[520px] text-[0.97rem] leading-[1.75] text-[#3E546A]">
+                                Kami hadir dengan tekad kuat untuk merevolusi
+                                cara belajar sains di Indonesia melalui
+                                teknologi dan pendekatan yang tepat.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                            <div className="reveal relative overflow-hidden rounded-lg border border-[#EEF3F8] p-10 before:absolute before:inset-x-0 before:top-0 before:h-[3px] before:bg-[#1B7FE8]">
+                                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-[#EAF4FF] text-[1.4rem]">
+                                    🔭
+                                </div>
+                                <h3 className="font-fraunces mb-3.5 text-[1.3rem] leading-[1.15] text-[#082544]">
+                                    Visi
+                                </h3>
+                                <p className="text-[0.92rem] leading-[1.75] text-[#3E546A]">
+                                    Menjadi platform edukasi sains berbasis
+                                    teknologi terdepan di Asia Tenggara yang
+                                    melahirkan generasi ilmuwan dan inovator
+                                    masa depan yang berkarakter dan berdaya
+                                    saing global.
+                                </p>
+                            </div>
+
+                            <div
+                                className="reveal relative overflow-hidden rounded-lg border border-[#EEF3F8] p-10 before:absolute before:inset-x-0 before:top-0 before:h-[3px] before:bg-[#1B7FE8]"
+                                style={{ transitionDelay: "0.1s" }}
+                            >
+                                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-[#EAF4FF] text-[1.4rem]">
+                                    🎯
+                                </div>
+                                <h3 className="font-fraunces mb-3.5 text-[1.3rem] leading-[1.15] text-[#082544]">
+                                    Misi
+                                </h3>
+                                <ul className="mt-3.5 flex list-none flex-col gap-2.5">
+                                    {[
+                                        "Menyediakan materi pembelajaran sains yang terstruktur, akurat, dan mudah dipahami",
+                                        "Menghadirkan pengalaman belajar interaktif berbasis data dan penelitian ilmiah",
+                                        "Membangun komunitas pelajar yang aktif, kolaboratif, dan saling mendukung",
+                                        "Menjamin aksesibilitas pendidikan sains berkualitas untuk seluruh lapisan masyarakat",
+                                    ].map((item, idx) => (
+                                        <li
+                                            key={idx}
+                                            className="flex items-start gap-2.5 text-[0.9rem] leading-[1.6] text-[#3E546A]"
+                                        >
+                                            <span className="mt-2 h-[7px] w-[7px] min-w-[7px] rounded-full bg-[#1B7FE8]"></span>
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* ALUR BELAJAR */}
+                <section
+                    id="alur-belajar"
+                    className="bg-[#F6FAFE] px-5 py-[96px]"
+                >
+                    <div className="mx-auto max-w-[1220px]">
+                        <div className="reveal mx-auto mb-16 max-w-[560px] text-center">
+                            <span className="mb-3.5 inline-block rounded bg-[#EAF4FF] px-3 py-1.5 text-[0.72rem] font-bold uppercase tracking-wider text-[#1B7FE8]">
+                                Cara Kerja
+                            </span>
+                            <h2 className="font-fraunces mb-3.5 text-[clamp(1.85rem,3vw,2.7rem)] leading-[1.15] text-[#082544]">
+                                Alur Belajar AtomVerse
+                            </h2>
+                            <p className="text-[0.97rem] leading-[1.75] text-[#3E546A]">
+                                Lima langkah sederhana untuk memulai perjalanan
+                                belajar sainsmu bersama kami.
+                            </p>
+                        </div>
+
+                        <div className="relative grid grid-cols-1 gap-8 md:grid-cols-5 md:gap-0">
+                            <div className="absolute left-[14%] right-[14%] top-[27px] hidden h-[2px] bg-[#C6DFF6] md:block"></div>
+
+                            {[
+                                ["01", "Daftar Akun", "Buat akun gratis dalam hitungan detik tanpa kartu kredit.", "#082544"],
+                                ["02", "Pilih Materi", "Telusuri kurikulum dan tentukan topik yang ingin kamu kuasai.", "#1B7FE8"],
+                                ["03", "Ikuti Kelas", "Belajar lewat video, modul, dan sesi tanya jawab bersama mentor.", "#1B7FE8"],
+                                ["04", "Ujian & Evaluasi", "Uji pemahamanmu dengan soal latihan dan ujian akhir modul.", "#1B7FE8"],
+                                ["05", "Raih Sertifikat", "Dapatkan sertifikat resmi yang dapat kamu bagikan ke LinkedIn.", "#0D5CB3"],
+                            ].map(([num, title, desc, bg], idx) => (
+                                <div
+                                    key={num}
+                                    className="reveal relative z-10 flex flex-col items-center px-2.5 text-center"
+                                    style={{
+                                        transitionDelay: `${0.05 + idx * 0.07}s`,
+                                    }}
+                                >
+                                    <div
+                                        className="mb-5 flex h-[54px] w-[54px] items-center justify-center rounded text-xl font-bold text-white shadow-[0_4px_14px_rgba(27,127,232,0.3)]"
+                                        style={{ backgroundColor: bg }}
+                                    >
+                                        {num}
+                                    </div>
+                                    <div className="mb-1.5 text-[0.9rem] font-bold text-[#082544]">
+                                        {title}
+                                    </div>
+                                    <div className="text-[0.78rem] leading-[1.55] text-[#3E546A]">
+                                        {desc}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* OVERVIEW MATERI */}
+                <section
+                    id="overview-materi"
+                    className="bg-white px-5 py-[96px]"
+                >
+                    <div className="mx-auto max-w-[1220px]">
+                        <div className="reveal mb-12 flex items-end justify-between gap-5">
+                            <div>
+                                <span className="mb-3.5 inline-block rounded bg-[#EAF4FF] px-3 py-1.5 text-[0.72rem] font-bold uppercase tracking-wider text-[#1B7FE8]">
+                                    Kurikulum
+                                </span>
+                                <h2 className="font-fraunces text-[clamp(1.85rem,3vw,2.7rem)] leading-[1.15] text-[#082544]">
+                                    Overview Materi
+                                </h2>
+                            </div>
+
+                            <a
+                                href="#promo"
+                                className="inline-block whitespace-nowrap rounded border-2 border-[#C8D8E8] bg-transparent px-7 py-3 text-[0.9rem] font-bold text-[#07182E] transition-all duration-150 hover:-translate-y-0.5 hover:border-[#1B7FE8] hover:text-[#1B7FE8]"
+                            >
+                                Lihat Semua Kelas →
+                            </a>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+                            {[
+                                {
+                                    image: "https://images.unsplash.com/photo-1507668077129-56e32842fceb?w=600&q=80",
+                                    alt: "Struktur Atom",
+                                    level: "Dasar",
+                                    title: "Struktur Atom & Tabel Periodik",
+                                    desc: "Pelajari susunan atom, proton, neutron, elektron, serta cara membaca tabel periodik unsur secara lengkap.",
+                                    modul: "12 Modul",
+                                    jam: "8 Jam",
+                                    rating: "4.9",
+                                },
+                                {
+                                    image: "https://images.unsplash.com/photo-1614935151651-0bea6508db6b?w=600&q=80",
+                                    alt: "Ikatan Kimia",
+                                    level: "Menengah",
+                                    title: "Ikatan Kimia & Molekul",
+                                    desc: "Memahami ikatan ion, kovalen, dan logam; serta cara pembentukan molekul dan senyawa dalam reaksi kimia.",
+                                    modul: "10 Modul",
+                                    jam: "6 Jam",
+                                    rating: "4.8",
+                                },
+                                {
+                                    image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=600&q=80",
+                                    alt: "Reaksi Kimia",
+                                    level: "Lanjutan",
+                                    title: "Reaksi Kimia & Stoikiometri",
+                                    desc: "Kupas tuntas hukum kekekalan massa, persamaan reaksi, dan perhitungan stoikiometri dalam kimia.",
+                                    modul: "14 Modul",
+                                    jam: "10 Jam",
+                                    rating: "4.9",
+                                },
+                            ].map((item, idx) => (
+                                <div
+                                    key={idx}
+                                    className="reveal group overflow-hidden rounded-lg border border-[#EEF3F8] transition-all duration-200 hover:-translate-y-1.5 hover:shadow-[0_14px_44px_rgba(27,127,232,0.1)]"
+                                    style={{
+                                        transitionDelay: `${0.06 + idx * 0.06}s`,
+                                    }}
+                                >
+                                    <div className="h-[185px] overflow-hidden bg-[#EAF4FF]">
+                                        <img
+                                            src={item.image}
+                                            alt={item.alt}
+                                            className="h-full w-full object-cover transition-transform duration-400 group-hover:scale-105"
+                                        />
+                                    </div>
+
+                                    <div className="p-6">
+                                        <span className="mb-3 inline-block rounded bg-[#EAF4FF] px-2.5 py-[3px] text-[0.7rem] font-bold uppercase tracking-wider text-[#1B7FE8]">
+                                            {item.level}
+                                        </span>
+
+                                        <h3 className="font-fraunces mb-2 text-[1.05rem] leading-[1.15] text-[#082544]">
+                                            {item.title}
+                                        </h3>
+
+                                        <p className="mb-4.5 text-[0.84rem] leading-[1.65] text-[#3E546A]">
+                                            {item.desc}
+                                        </p>
+
+                                        <div className="flex gap-4.5 border-t border-[#EEF3F8] pt-4">
+                                            <span className="flex items-center gap-1.5 text-[0.75rem] font-semibold text-[#7A90A8]">
+                                                📚 {item.modul}
+                                            </span>
+                                            <span className="flex items-center gap-1.5 text-[0.75rem] font-semibold text-[#7A90A8]">
+                                                ⏱ {item.jam}
+                                            </span>
+                                            <span className="flex items-center gap-1.5 text-[0.75rem] font-semibold text-[#7A90A8]">
+                                                ⭐ {item.rating}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* PROMO */}
+                <section
+                    id="promo"
+                    className="relative overflow-hidden bg-[#082544] px-5 py-[96px]"
+                >
+                    <div className="pointer-events-none absolute -right-[80px] -top-[80px] h-[500px] w-[500px] rounded-full bg-[rgba(27,127,232,0.1)]"></div>
+                    <div className="pointer-events-none absolute -bottom-[60px] -left-[60px] h-[340px] w-[340px] rounded-full bg-[rgba(56,173,238,0.07)]"></div>
+
+                    <div className="reveal relative z-10 mx-auto max-w-[820px] text-center">
+                        <span className="mb-4.5 inline-block rounded bg-[rgba(255,255,255,0.1)] px-3.5 py-1.5 text-[0.72rem] font-bold uppercase tracking-wider text-[#7FCCFF]">
+                            🎉 Bergabung Sekarang
+                        </span>
+
+                        <h2 className="font-fraunces mb-4 text-[clamp(1.9rem,3.5vw,3rem)] leading-[1.15] text-white">
+                            Jadilah Bagian dari
+                            <br />
+                            Komunitas AtomVerse
+                        </h2>
+
+                        <p className="mx-auto mb-9 max-w-[600px] text-base leading-[1.75] text-[#7FAACC]">
+                            Bergabunglah bersama pelajar aktif lainnya.
+                            Dapatkan akses penuh ke seluruh materi dan komunitas yang mendukungmu
+                            berkembang.
+                        </p>
+
+                        <ul className="mb-12 flex list-none flex-wrap justify-center gap-x-7 gap-y-3">
+                            {[
+                                "Akses modul materi lengkap",
+                                "Update materi gratis selamanya",
+                            ].map((item, idx) => (
+                                <li
+                                    key={idx}
+                                    className="flex items-center gap-2.5 text-[0.9rem] text-[#AACCE8]"
+                                >
+                                    <span className="flex h-5 w-5 min-w-[20px] items-center justify-center rounded bg-[#1B7FE8] text-[0.7rem] text-white">
+                                        ✓
+                                    </span>
+                                    {item}
+                                </li>
+                            ))}
+                        </ul>
+
+                        <div className="flex flex-wrap justify-center gap-3.5">
+                            <Link
+                                href="/register"
+                                className="inline-block rounded border-2 border-white bg-white px-7 py-3 text-[0.9rem] font-bold text-[#082544] transition-all duration-150 hover:-translate-y-0.5 hover:bg-[#EAF4FF] hover:shadow-[0_6px_20px_rgba(0,0,0,0.1)]"
+                            >
+                                Daftar Sekarang — Gratis
+                            </Link>
+
+                            <a
+                                href="#overview-materi"
+                                className="inline-block rounded border-2 border-[rgba(255,255,255,0.35)] bg-transparent px-7 py-3 text-[0.9rem] font-bold text-white transition-all duration-150 hover:-translate-y-0.5 hover:border-[rgba(255,255,255,0.75)]"
+                            >
+                                Lihat Materi Lebih Lanjut
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                {/* FAQ */}
+                <section id="faq" className="bg-white px-5 py-[96px]">
+                    <div className="mx-auto max-w-[1220px]">
+                        <div className="reveal mx-auto mb-14 max-w-[520px] text-center">
+                            <span className="mb-3.5 inline-block rounded bg-[#EAF4FF] px-3 py-1.5 text-[0.72rem] font-bold uppercase tracking-wider text-[#1B7FE8]">
+                                FAQ
+                            </span>
+                            <h2 className="font-fraunces mb-3.5 text-[clamp(1.85rem,3vw,2.7rem)] leading-[1.15] text-[#082544]">
+                                Pertanyaan yang Sering Diajukan
+                            </h2>
+                            <p className="text-[0.97rem] leading-[1.75] text-[#3E546A]">
+                                Belum menemukan jawaban? Hubungi tim kami kapan
+                                saja.
+                            </p>
+                        </div>
+
+                        <div className="mx-auto flex max-w-[800px] flex-col gap-3">
+                            {faqs.map((faq, i) => (
+                                <div
+                                    key={i}
+                                    className="reveal overflow-hidden rounded-lg border border-[#EEF3F8]"
+                                    style={{ transitionDelay: `${i * 0.05}s` }}
+                                >
+                                    <button
+                                        type="button"
+                                        className={`flex w-full items-center justify-between gap-4 border-none bg-transparent px-6 py-5 text-left text-[0.95rem] font-semibold transition-colors duration-150 ${
+                                            openFaqIndex === i
+                                                ? "bg-[#EAF4FF] text-[#1B7FE8]"
+                                                : "text-[#082544] hover:bg-[#EAF4FF]"
+                                        }`}
+                                        onClick={() => toggleFaq(i)}
+                                    >
+                                        {faq.q}
+                                        <span
+                                            className={`flex h-[26px] w-[26px] min-w-[26px] items-center justify-center rounded bg-[#C6DFF6] text-[1.1rem] font-bold transition-all duration-250 ${
+                                                openFaqIndex === i
+                                                    ? "rotate-45 bg-[#1B7FE8] text-white"
+                                                    : "text-[#1B7FE8]"
+                                            }`}
+                                        >
+                                            +
+                                        </span>
+                                    </button>
+
+                                    <div
+                                        className={`border-t border-[#EEF3F8] px-6 pb-5 text-[0.9rem] leading-[1.75] text-[#3E546A] ${
+                                            openFaqIndex === i ? "block" : "hidden"
+                                        }`}
+                                    >
+                                        {faq.a}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* FOOTER */}
+                <footer className="bg-[#082544] px-5 pb-8 pt-16">
+                    <div className="mx-auto max-w-[1220px]">
+                        <div className="mb-7 grid grid-cols-1 gap-12 border-b border-[rgba(255,255,255,0.1)] pb-12 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
+                            <div>
+                                <div className="flex items-center gap-2.5 text-white">
+                                    <svg
+                                        className="h-[38px] w-[38px] shrink-0"
+                                        viewBox="0 0 42 42"
+                                        fill="none"
+                                    >
+                                        <ellipse
+                                            cx="21"
+                                            cy="21"
+                                            rx="19"
+                                            ry="7"
+                                            stroke="#1B7FE8"
+                                            strokeWidth="1.7"
+                                        />
+                                        <ellipse
+                                            cx="21"
+                                            cy="21"
+                                            rx="19"
+                                            ry="7"
+                                            stroke="#1B7FE8"
+                                            strokeWidth="1.7"
+                                            transform="rotate(60 21 21)"
+                                        />
+                                        <ellipse
+                                            cx="21"
+                                            cy="21"
+                                            rx="19"
+                                            ry="7"
+                                            stroke="#1B7FE8"
+                                            strokeWidth="1.7"
+                                            transform="rotate(-60 21 21)"
+                                        />
+                                        <circle
+                                            cx="21"
+                                            cy="21"
+                                            r="4.5"
+                                            fill="#1B7FE8"
+                                        />
+                                        <circle
+                                            cx="39.5"
+                                            cy="21"
+                                            r="2.2"
+                                            fill="#38ADEE"
+                                        />
+                                    </svg>
+
+                                    <span className="font-fraunces text-xl font-extrabold tracking-tight">
+                                        Atom
+                                        <em className="not-italic text-[#1B7FE8]">
+                                            verse
+                                        </em>
+                                    </span>
+                                </div>
+
+                                <p className="mt-3.5 text-[0.85rem] leading-[1.7] text-[#5A85A5]">
+                                    Platform pembelajaran sains berbasis
+                                    teknologi untuk generasi pelajar Indonesia
+                                    yang ingin menguasai ilmu pengetahuan secara
+                                    mendalam.
+                                </p>
+                            </div>
+
+                            <div>
+                                <h4 className="mb-4 text-[0.78rem] font-bold uppercase tracking-wider text-white">
+                                    Platform
+                                </h4>
+                                <ul className="flex list-none flex-col gap-2.5">
+                                    <li>
+                                        <a
+                                            href="#"
+                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
+                                        >
+                                            Tentang Kami
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="#"
+                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
+                                        >
+                                            Kelas &amp; Materi
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="#"
+                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
+                                        >
+                                            Blog Sains
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="#"
+                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
+                                        >
+                                            Karier
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 className="mb-4 text-[0.78rem] font-bold uppercase tracking-wider text-white">
+                                    Belajar
+                                </h4>
+                                <ul className="flex list-none flex-col gap-2.5">
+                                    <li>
+                                        <a
+                                            href="#"
+                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
+                                        >
+                                            Kimia Dasar
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="#"
+                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
+                                        >
+                                            Fisika Atom
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="#"
+                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
+                                        >
+                                            Biologi Sel
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="#"
+                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
+                                        >
+                                            Sertifikasi
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 className="mb-4 text-[0.78rem] font-bold uppercase tracking-wider text-white">
+                                    Dukungan
+                                </h4>
+                                <ul className="flex list-none flex-col gap-2.5">
+                                    <li>
+                                        <a
+                                            href="#"
+                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
+                                        >
+                                            Pusat Bantuan
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="#"
+                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
+                                        >
+                                            Hubungi Kami
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="#"
+                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
+                                        >
+                                            Syarat &amp; Ketentuan
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="#"
+                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
+                                        >
+                                            Kebijakan Privasi
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-wrap items-center justify-between gap-2.5 text-[0.78rem] text-[#3A5A70]">
+                            <span>
+                                © {new Date().getFullYear()} AtomVerse. Hak
+                                cipta dilindungi undang-undang.
+                            </span>
+                            <span>Dibuat dengan ❤️ untuk pelajar Indonesia</span>
                         </div>
                     </div>
                 </footer>
             </div>
         </>
-    );
-}
-
-function FeatureCard({
-    step,
-    title,
-    description,
-    icon,
-}: {
-    step: number;
-    title: string;
-    description: string;
-    icon: React.ReactNode;
-}) {
-    return (
-        <div className="card-hover p-8 text-center">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary-50 text-primary-600 mb-5">
-                {icon}
-            </div>
-            <div className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary-600 text-white text-xs font-bold mb-3">
-                {step}
-            </div>
-            <h3 className="text-lg font-semibold text-surface-900 mb-2">
-                {title}
-            </h3>
-            <p className="text-surface-500 leading-relaxed">{description}</p>
-        </div>
-    );
-}
-
-function StatCard({ value, label }: { value: string; label: string }) {
-    return (
-        <div className="text-center">
-            <p className="text-3xl sm:text-4xl font-bold text-primary-600">
-                {value}
-            </p>
-            <p className="mt-1 text-sm text-surface-500">{label}</p>
-        </div>
     );
 }
