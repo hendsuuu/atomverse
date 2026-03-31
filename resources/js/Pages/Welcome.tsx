@@ -316,7 +316,7 @@ export default function Welcome() {
                                 </a>
                             </div>
 
-                            <div className="flex flex-wrap">
+                            {/* <div className="flex flex-wrap">
                                 <div className="flex flex-col pr-7 md:border-r md:border-[#C8D8E8]">
                                     <span className="font-fraunces text-[1.65rem] font-bold leading-none text-[#082544]">
                                         12K+
@@ -343,7 +343,7 @@ export default function Welcome() {
                                         Rating Platform
                                     </span>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
 
                        <div
@@ -610,7 +610,7 @@ export default function Welcome() {
                                 </g>
                             </svg>
 
-                            <div className="w-full max-w-[420px] overflow-hidden rounded-lg border-2 border-[#C6DFF6]">
+                            {/* <div className="w-full max-w-[420px] overflow-hidden rounded-lg border-2 border-[#C6DFF6]">
                                 <img
                                     src="https://images.unsplash.com/photo-1532094349884-543559c4c0f0?w=700&q=80"
                                     alt="Laboratorium kimia"
@@ -622,7 +622,7 @@ export default function Welcome() {
                                             "https://images.unsplash.com/photo-1628595351029-c2bf17511435?w=700&q=80";
                                     }}
                                 />
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </section>
@@ -778,7 +778,6 @@ export default function Welcome() {
                                     level: "Dasar",
                                     title: "Struktur Atom & Tabel Periodik",
                                     desc: "Pelajari susunan atom, proton, neutron, elektron, serta cara membaca tabel periodik unsur secara lengkap.",
-                                    modul: "12 Modul",
                                     jam: "8 Jam",
                                     rating: "4.9",
                                 },
@@ -788,7 +787,6 @@ export default function Welcome() {
                                     level: "Menengah",
                                     title: "Ikatan Kimia & Molekul",
                                     desc: "Memahami ikatan ion, kovalen, dan logam; serta cara pembentukan molekul dan senyawa dalam reaksi kimia.",
-                                    modul: "10 Modul",
                                     jam: "6 Jam",
                                     rating: "4.8",
                                 },
@@ -798,7 +796,6 @@ export default function Welcome() {
                                     level: "Lanjutan",
                                     title: "Reaksi Kimia & Stoikiometri",
                                     desc: "Kupas tuntas hukum kekekalan massa, persamaan reaksi, dan perhitungan stoikiometri dalam kimia.",
-                                    modul: "14 Modul",
                                     jam: "10 Jam",
                                     rating: "4.9",
                                 },
@@ -832,9 +829,6 @@ export default function Welcome() {
                                         </p>
 
                                         <div className="flex gap-4.5 border-t border-[#EEF3F8] pt-4">
-                                            <span className="flex items-center gap-1.5 text-[0.75rem] font-semibold text-[#7A90A8]">
-                                                📚 {item.modul}
-                                            </span>
                                             <span className="flex items-center gap-1.5 text-[0.75rem] font-semibold text-[#7A90A8]">
                                                 ⏱ {item.jam}
                                             </span>
@@ -969,8 +963,8 @@ export default function Welcome() {
                 {/* FOOTER */}
                 <footer className="bg-[#082544] px-5 pb-8 pt-16">
                     <div className="mx-auto max-w-[1220px]">
-                        <div className="mb-7 grid grid-cols-1 gap-12 border-b border-[rgba(255,255,255,0.1)] pb-12 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
-                            <div>
+                        <div className="mb-7 flex justify-between gap-12 border-b border-[rgba(255,255,255,0.1)] pb-12 lg:flex-row flex-col">
+                            <div className="w-4/8">
                                 <div className="flex items-center gap-2.5 text-white">
                                     <svg
                                         className="h-[38px] w-[38px] shrink-0"
@@ -1062,56 +1056,9 @@ export default function Welcome() {
                                             Blog Sains
                                         </a>
                                     </li>
-                                    <li>
-                                        <a
-                                            href="#"
-                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
-                                        >
-                                            Karier
-                                        </a>
-                                    </li>
                                 </ul>
                             </div>
 
-                            <div>
-                                <h4 className="mb-4 text-[0.78rem] font-bold uppercase tracking-wider text-white">
-                                    Belajar
-                                </h4>
-                                <ul className="flex list-none flex-col gap-2.5">
-                                    <li>
-                                        <a
-                                            href="#"
-                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
-                                        >
-                                            Kimia Dasar
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            href="#"
-                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
-                                        >
-                                            Fisika Atom
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            href="#"
-                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
-                                        >
-                                            Biologi Sel
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            href="#"
-                                            className="text-[0.85rem] text-[#5A85A5] transition-colors duration-150 hover:text-white"
-                                        >
-                                            Sertifikasi
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
 
                             <div>
                                 <h4 className="mb-4 text-[0.78rem] font-bold uppercase tracking-wider text-white">
