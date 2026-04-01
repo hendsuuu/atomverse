@@ -15,6 +15,7 @@ jobs:
       SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
       SSH_PORT: ${{ secrets.SSH_PORT }}
       SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+      SSH_PASSPHRASE: ${{ secrets.SERVER_SSH_PASSPHRASE }}
 
     steps:
       - name: Check env presence
@@ -31,6 +32,7 @@ jobs:
           username: ${{ env.SSH_USERNAME }}
           key: ${{ env.SSH_KEY }}
           port: ${{ env.SSH_PORT }}
+          passphrase: ${{ env.SSH_PASSPHRASE }}
           script: |
             cd atomverse
             git pull origin main
