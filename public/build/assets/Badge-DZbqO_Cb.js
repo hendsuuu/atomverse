@@ -1,1 +1,0 @@
-import{t as e}from"./app-D9l_K-GL.js";var t=e(),n={success:`badge-success`,warning:`badge-warning`,danger:`badge-danger`,primary:`badge-primary`,surface:`badge-surface`};function r({variant:e=`surface`,children:r}){return(0,t.jsx)(`span`,{className:n[e],children:r})}export{r as t};
