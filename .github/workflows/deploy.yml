@@ -1,118 +1,27 @@
-name: Deploy to Shared Hosting
+name: Deploy to Server
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: atomverse
-
-    env:
-      FTP_HOST: ${{ secrets.FTP_HOST }}
-      FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-      FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-      FTP_PORT: ${{ secrets.FTP_PORT }}
-      FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
-      SSH_HOST: ${{ secrets.SSH_HOST }}
-      SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-      SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
-      SSH_PORT: ${{ secrets.SSH_PORT }}
-      SSH_PROJECT_DIR: ${{ secrets.SSH_PROJECT_DIR }}
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - name: Connect and deploy
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          php-version: "8.4"
-          extensions: mbstring, xml, ctype, json, bcmath, pdo_mysql, gd, curl, zip
-          coverage: none
-
-      - name: Install Composer dependencies
-        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
-
-      - name: Install NPM dependencies
-        run: npm ci
-
-      - name: Build frontend assets
-        env:
-          NODE_OPTIONS: "--max-old-space-size=4096"
-        run: npx vite build
-
-      - name: Prepare files for deployment
-        run: |
-          rm -rf node_modules
-          rm -rf tests
-          rm -rf .git
-          rm -rf .github
-          rm -rf storage/logs/*.log
-
-      - name: Verify deployment secrets
-        run: |
-          if [ -z "$FTP_HOST" ]; then
-            echo "::error::FTP_HOST secret is not set in the 'atomverse' environment"
-            exit 1
-          fi
-          if [ -z "$FTP_USERNAME" ]; then
-            echo "::error::FTP_USERNAME secret is not set in the 'atomverse' environment"
-            exit 1
-          fi
-          if [ -z "$FTP_PASSWORD" ]; then
-            echo "::error::FTP_PASSWORD secret is not set in the 'atomverse' environment"
-            exit 1
-          fi
-          if [ -z "$FTP_SERVER_DIR" ]; then
-            echo "::error::FTP_SERVER_DIR secret is not set in the 'atomverse' environment"
-            exit 1
-          fi
-          echo "All required FTP secrets are available"
-
-      - name: Deploy to shared hosting via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ env.FTP_HOST }}
-          username: ${{ env.FTP_USERNAME }}
-          password: ${{ env.FTP_PASSWORD }}
-          port: ${{ env.FTP_PORT != '' && env.FTP_PORT || 21 }}
-          protocol: ftp
-          local-dir: ./
-          server-dir: ${{ env.FTP_SERVER_DIR }}
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/tests/**
-            **/.env
-            **/.env.backup
-            **/storage/logs/**
-            **/storage/framework/cache/data/**
-            **/storage/framework/sessions/**
-            **/storage/framework/views/**
-
-      - name: Run post-deploy commands via SSH
-        if: ${{ env.SSH_HOST != '' }}
-        uses: appleboy/ssh-action@v1.2.1
-        with:
-          host: ${{ env.SSH_HOST }}
-          username: ${{ env.SSH_USERNAME }}
-          password: ${{ env.SSH_PASSWORD }}
-          port: ${{ env.SSH_PORT != '' && env.SSH_PORT || 22 }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
           script: |
-            cd ${{ env.SSH_PROJECT_DIR }}
+            cd atomverse
+            git pull origin main
+            composer install --no-dev --optimize-autoloader
+            npm ci
+            npm run build
             php artisan migrate --force
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
-            php artisan storage:link
+            php artisan optimize
