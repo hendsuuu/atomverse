@@ -3,6 +3,7 @@ import { Head, Link } from "@inertiajs/react";
 import Breadcrumb from "@/Components/Breadcrumb";
 import ContentBlockRenderer from "@/Components/ContentBlockRenderer";
 import type { Material, MaterialSection } from "@/types";
+import ChatBot from "@/Components/ChatBot";
 
 interface QuizInfo {
     id: number;
@@ -571,6 +572,8 @@ export default function MaterialShow({
                                     ))}
                                 </nav>
                             </div>
+
+                                <ChatBot />
                         </div>
                     </aside>
                 </div>
@@ -704,6 +707,11 @@ export default function MaterialShow({
                     </div>
                 </>
             )}
+
+            {/* Mobile floating chatbot (hidden on desktop where sidebar chatbot is used) */}
+            <div className="lg:hidden">
+                <ChatBot variant="floating" />
+            </div>
         </div>
     );
 }

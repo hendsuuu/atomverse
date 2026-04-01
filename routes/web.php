@@ -16,6 +16,7 @@ use App\Http\Controllers\Student\ExamController as StudentExamController;
 use App\Http\Controllers\Student\HistoryController;
 use App\Http\Controllers\Student\MaterialController as StudentMaterialController;
 use App\Http\Controllers\Student\QuizController as StudentQuizController;
+use App\Http\Controllers\Student\ChatbotController;
 use Illuminate\Support\Facades\Route;
 
 // ── Auth ──
@@ -115,4 +116,7 @@ Route::middleware(['auth', 'role:user'])
 
         // Learning History
         Route::get('/history', [HistoryController::class, 'index'])->name('history');
+
+        // AI Chatbot
+        Route::post('/chatbot', [ChatbotController::class, 'chat'])->name('chatbot.chat');
     });

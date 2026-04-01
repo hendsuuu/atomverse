@@ -2,6 +2,7 @@ import { type ReactNode, useState, useRef, useEffect } from "react";
 import { Link, usePage } from "@inertiajs/react";
 import { useAuth, useFlash } from "@/hooks/useAuth";
 import FlashMessage from "@/Components/FlashMessage";
+import ChatBot from "@/Components/ChatBot";
 
 interface AppLayoutProps {
     children: ReactNode;
@@ -188,6 +189,9 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
                 {children}
             </main>
+
+            {/* Hide chatbot on quiz, exam, and game pages */}
+            {!url.match(/^\/(quizzes|exams)\//) && <ChatBot />}
         </div>
     );
 }

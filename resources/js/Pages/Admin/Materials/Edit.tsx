@@ -6,6 +6,8 @@ import Breadcrumb from "@/Components/Breadcrumb";
 import ImageUploader from "@/Components/ImageUploader";
 import ConfirmDialog from "@/Components/ConfirmDialog";
 import RichTextEditor from "@/Components/RichTextEditor";
+import BlockImageUploader from "@/Components/BlockImageUploader";
+import BlockImageGallery from "@/Components/BlockImageGallery";
 import type { Material, MaterialSection, ContentBlock } from "@/types";
 
 interface Props {
@@ -379,14 +381,27 @@ function SectionCard({
             type === "rich_text"
                 ? { type: "rich_text", content: "" }
                 : type === "image"
-                  ? { type: "image", url: "", caption: "" }
-                  : type === "embed_youtube"
-                    ? { type: "embed_youtube", videoId: "" }
-                    : type === "callout"
-                      ? { type: "callout", variant: "info", content: "" }
-                      : type === "quote"
-                        ? { type: "quote", content: "", author: "" }
-                        : { type: "divider" };
+                  ? {
+                        type: "image",
+                        url: "",
+                        caption: "",
+                        width: "full" as const,
+                        align: "center" as const,
+                    }
+                  : type === "image_gallery"
+                    ? {
+                          type: "image_gallery",
+                          images: [],
+                          columns: 3 as const,
+                          gap: "medium" as const,
+                      }
+                    : type === "embed_youtube"
+                      ? { type: "embed_youtube", videoId: "" }
+                      : type === "callout"
+                        ? { type: "callout", variant: "info", content: "" }
+                        : type === "quote"
+                          ? { type: "quote", content: "", author: "" }
+                          : { type: "divider" };
         setData("blocks", [...data.blocks, newBlock]);
     };
 
@@ -521,7 +536,9 @@ function SectionCard({
                                         <span className="badge-primary text-xs">
                                             {block.type === "embed_youtube"
                                                 ? "YouTube"
-                                                : block.type}
+                                                : block.type === "image_gallery"
+                                                  ? "Gallery"
+                                                  : block.type}
                                         </span>
                                         <div className="flex items-center gap-0.5">
                                             <button
@@ -587,35 +604,25 @@ function SectionCard({
                                     />
                                 )}
                                 {block.type === "image" && (
-                                    <div className="space-y-2">
-                                        <input
-                                            className="input"
-                                            value={block.url || ""}
-                                            onChange={(e) =>
-                                                updateBlock(bi, {
-                                                    url: e.target.value,
-                                                })
-                                            }
-                                            placeholder="Image URL (e.g. /storage/media/image.png)"
-                                        />
-                                        {block.url && (
-                                            <img
-                                                src={block.url}
-                                                alt={block.caption || ""}
-                                                className="max-h-40 rounded-lg object-cover"
-                                            />
-                                        )}
-                                        <input
-                                            className="input"
-                                            value={block.caption || ""}
-                                            onChange={(e) =>
-                                                updateBlock(bi, {
-                                                    caption: e.target.value,
-                                                })
-                                            }
-                                            placeholder="Caption (optional)"
-                                        />
-                                    </div>
+                                    <BlockImageUploader
+                                        url={block.url || ""}
+                                        caption={block.caption || ""}
+                                        width={block.width || "full"}
+                                        align={block.align || "center"}
+                                        onChange={(updates) =>
+                                            updateBlock(bi, updates)
+                                        }
+                                    />
+                                )}
+                                {block.type === "image_gallery" && (
+                                    <BlockImageGallery
+                                        images={block.images || []}
+                                        columns={block.columns || 3}
+                                        gap={block.gap || "medium"}
+                                        onChange={(updates) =>
+                                            updateBlock(bi, updates)
+                                        }
+                                    />
                                 )}
                                 {block.type === "callout" && (
                                     <div className="space-y-2">
@@ -720,6 +727,12 @@ function SectionCard({
                                 className="btn-secondary btn-sm"
                             >
                                 + Image
+                            </button>
+                            <button
+                                onClick={() => addBlock("image_gallery")}
+                                className="btn-secondary btn-sm"
+                            >
+                                + Gallery
                             </button>
                             <button
                                 onClick={() => addBlock("callout")}

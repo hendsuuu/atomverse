@@ -2,7 +2,7 @@ export interface User {
     id: number;
     name: string;
     email: string;
-    role: 'superadmin' | 'user';
+    role: "superadmin" | "user";
     avatar: string | null;
     is_active: boolean;
     email_verified_at: string | null;
@@ -17,7 +17,7 @@ export interface Course {
     description: string | null;
     thumbnail: string | null;
     thumbnail_url: string | null;
-    status: 'draft' | 'published';
+    status: "draft" | "published";
     created_by: number;
     creator?: User;
     materials_count?: number;
@@ -36,7 +36,7 @@ export interface Material {
     excerpt: string | null;
     cover_image: string | null;
     cover_image_url: string | null;
-    status: 'draft' | 'published';
+    status: "draft" | "published";
     estimated_read_time: number | null;
     sort_order: number;
     published_at: string | null;
@@ -58,19 +58,44 @@ export interface MaterialSection {
     image: string | null;
     image_url: string | null;
     image_caption: string | null;
-    layout_variant: 'default' | 'wide' | 'centered' | 'split';
+    layout_variant: "default" | "wide" | "centered" | "split";
     sort_order: number;
     created_at: string;
     updated_at: string;
 }
 
+export type ImageAlign = "left" | "center" | "right";
+export type ImageWidth = "small" | "medium" | "large" | "full";
+
+export interface GalleryImage {
+    url: string;
+    caption?: string;
+    objectPosition?: string;
+}
+
 export type ContentBlock =
-    | { type: 'rich_text'; content: string }
-    | { type: 'image'; url: string; caption?: string }
-    | { type: 'callout'; variant: 'info' | 'warning' | 'tip' | 'note'; content: string }
-    | { type: 'quote'; content: string; author?: string }
-    | { type: 'divider' }
-    | { type: 'embed_youtube'; videoId: string };
+    | { type: "rich_text"; content: string }
+    | {
+          type: "image";
+          url: string;
+          caption?: string;
+          width?: ImageWidth;
+          align?: ImageAlign;
+      }
+    | {
+          type: "image_gallery";
+          images: GalleryImage[];
+          columns?: 2 | 3 | 4;
+          gap?: "small" | "medium" | "large";
+      }
+    | {
+          type: "callout";
+          variant: "info" | "warning" | "tip" | "note";
+          content: string;
+      }
+    | { type: "quote"; content: string; author?: string }
+    | { type: "divider" }
+    | { type: "embed_youtube"; videoId: string };
 
 export interface PaginatedData<T> {
     data: T[];
