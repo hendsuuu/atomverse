@@ -90,12 +90,20 @@ export default function ChatBot({ variant = "floating" }: ChatBotProps) {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                 >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                    />
                 </svg>
             ) : (
                 messages.length > 0 && (
                     <button
-                        onClick={(e) => { e.stopPropagation(); setMessages([]); }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setMessages([]);
+                        }}
                         className="text-white/60 hover:text-white text-xs px-2 py-1 rounded-lg hover:bg-white/10 transition-colors"
                         title="Clear chat"
                     >
@@ -115,7 +123,8 @@ export default function ChatBot({ variant = "floating" }: ChatBotProps) {
                 Halo! Saya Atom 👋
             </p>
             <p className="text-xs text-surface-500 mb-3 max-w-[220px] mx-auto">
-                Saya bisa membantu menjelaskan materi pembelajaran dan cara menggunakan Atomverse.
+                Saya bisa membantu menjelaskan materi pembelajaran dan cara
+                menggunakan Atomverse.
             </p>
             <div className="space-y-1.5">
                 {[
@@ -154,7 +163,10 @@ export default function ChatBot({ variant = "floating" }: ChatBotProps) {
                                 : "bg-surface-100 text-surface-800 rounded-bl-md"
                         }`}
                     >
-                        <MessageContent text={msg.text} isUser={msg.role === "user"} />
+                        <MessageContent
+                            text={msg.text}
+                            isUser={msg.role === "user"}
+                        />
                     </div>
                 </div>
             ))}
@@ -163,9 +175,18 @@ export default function ChatBot({ variant = "floating" }: ChatBotProps) {
                 <div className="flex justify-start">
                     <div className="bg-surface-100 rounded-2xl rounded-bl-md px-4 py-3">
                         <div className="flex gap-1.5">
-                            <span className="w-2 h-2 bg-surface-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                            <span className="w-2 h-2 bg-surface-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                            <span className="w-2 h-2 bg-surface-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                            <span
+                                className="w-2 h-2 bg-surface-400 rounded-full animate-bounce"
+                                style={{ animationDelay: "0ms" }}
+                            />
+                            <span
+                                className="w-2 h-2 bg-surface-400 rounded-full animate-bounce"
+                                style={{ animationDelay: "150ms" }}
+                            />
+                            <span
+                                className="w-2 h-2 bg-surface-400 rounded-full animate-bounce"
+                                style={{ animationDelay: "300ms" }}
+                            />
                         </div>
                     </div>
                 </div>
@@ -196,8 +217,18 @@ export default function ChatBot({ variant = "floating" }: ChatBotProps) {
                     disabled={!input.trim() || loading}
                     className="p-1.5 rounded-lg text-primary-600 hover:bg-primary-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors flex-shrink-0"
                 >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                        />
                     </svg>
                 </button>
             </div>
@@ -219,7 +250,10 @@ export default function ChatBot({ variant = "floating" }: ChatBotProps) {
             <div className="card overflow-hidden mt-4">
                 {chatHeader}
                 {open && (
-                    <div className="flex flex-col animate-fade-in" style={{ height: "360px" }}>
+                    <div
+                        className="flex flex-col animate-fade-in"
+                        style={{ height: "360px" }}
+                    >
                         {chatMessages}
                         {chatInput}
                     </div>
@@ -241,12 +275,32 @@ export default function ChatBot({ variant = "floating" }: ChatBotProps) {
                 title="Chat dengan Atom AI"
             >
                 {open ? (
-                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <svg
+                        className="w-6 h-6 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                        />
                     </svg>
                 ) : (
-                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    <svg
+                        className="w-6 h-6 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                        />
                     </svg>
                 )}
             </button>
@@ -281,7 +335,10 @@ function MessageContent({ text, isUser }: { text: string; isUser: boolean }) {
                 }
                 if (part.startsWith("`") && part.endsWith("`")) {
                     return (
-                        <code key={i} className="bg-surface-200 px-1 py-0.5 rounded text-xs">
+                        <code
+                            key={i}
+                            className="bg-surface-200 px-1 py-0.5 rounded text-xs"
+                        >
                             {part.slice(1, -1)}
                         </code>
                     );

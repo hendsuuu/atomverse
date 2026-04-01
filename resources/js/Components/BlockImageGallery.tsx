@@ -1,4 +1,11 @@
-import { useState, useRef, useCallback, type ChangeEvent, type MouseEvent, type TouchEvent } from "react";
+import {
+    useState,
+    useRef,
+    useCallback,
+    type ChangeEvent,
+    type MouseEvent,
+    type TouchEvent,
+} from "react";
 import axios from "axios";
 import type { GalleryImage } from "@/types";
 
@@ -138,8 +145,11 @@ function GalleryItem({
     // Parse "50% 50%" or "center center" to [x, y] percentages
     const parsePosition = (pos: string): [number, number] => {
         const map: Record<string, number> = {
-            left: 0, center: 50, right: 100,
-            top: 0, bottom: 100,
+            left: 0,
+            center: 50,
+            right: 100,
+            top: 0,
+            bottom: 100,
         };
         const parts = pos.split(/\s+/);
         const x = map[parts[0]] ?? (parseFloat(parts[0]) || 50);
@@ -154,8 +164,14 @@ function GalleryItem({
             const el = containerRef.current;
             if (!el) return;
             const rect = el.getBoundingClientRect();
-            const x = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
-            const y = Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100));
+            const x = Math.max(
+                0,
+                Math.min(100, ((clientX - rect.left) / rect.width) * 100),
+            );
+            const y = Math.max(
+                0,
+                Math.min(100, ((clientY - rect.top) / rect.height) * 100),
+            );
             onUpdate({ objectPosition: `${Math.round(x)}% ${Math.round(y)}%` });
         },
         [onUpdate],
@@ -231,9 +247,14 @@ function GalleryItem({
                                 {/* Dot */}
                                 <div
                                     className={`absolute w-5 h-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-lg pointer-events-none ${
-                                        dragging ? "bg-primary-500 scale-110" : "bg-primary-400"
+                                        dragging
+                                            ? "bg-primary-500 scale-110"
+                                            : "bg-primary-400"
                                     } transition-transform`}
-                                    style={{ left: `${posX}%`, top: `${posY}%` }}
+                                    style={{
+                                        left: `${posX}%`,
+                                        top: `${posY}%`,
+                                    }}
                                 />
                                 {/* Position label */}
                                 <div className="absolute bottom-1 left-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded pointer-events-none">
@@ -243,7 +264,9 @@ function GalleryItem({
                         )}
                     </div>
                     {/* Hover controls */}
-                    <div className={`absolute top-2 right-2 flex gap-1 ${adjusting ? "opacity-100" : "opacity-0 group-hover:opacity-100"} transition-opacity`}>
+                    <div
+                        className={`absolute top-2 right-2 flex gap-1 ${adjusting ? "opacity-100" : "opacity-0 group-hover:opacity-100"} transition-opacity`}
+                    >
                         <button
                             type="button"
                             onClick={() => setAdjusting(!adjusting)}
@@ -252,7 +275,9 @@ function GalleryItem({
                                     ? "bg-primary-500 text-white hover:bg-primary-600"
                                     : "bg-white/90 text-surface-700 hover:bg-white"
                             }`}
-                            title={adjusting ? "Done adjusting" : "Adjust position"}
+                            title={
+                                adjusting ? "Done adjusting" : "Adjust position"
+                            }
                         >
                             {adjusting ? "✓ Done" : "Crop"}
                         </button>

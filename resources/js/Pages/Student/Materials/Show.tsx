@@ -573,7 +573,7 @@ export default function MaterialShow({
                                 </nav>
                             </div>
 
-                                <ChatBot />
+                            <ChatBot />
                         </div>
                     </aside>
                 </div>
