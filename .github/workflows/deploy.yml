@@ -34,7 +34,7 @@ jobs:
           port: ${{ env.SSH_PORT }}
           passphrase: ${{ env.SSH_PASSPHRASE }}
           script: |
-            cd ~/home/atoe7739/atomverse
+            cd ~/atoe7739/atomverse
             git pull origin main
             composer install --no-dev --optimize-autoloader
             npm ci
