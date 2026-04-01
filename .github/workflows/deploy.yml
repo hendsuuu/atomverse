@@ -18,14 +18,7 @@ jobs:
       SSH_PASSPHRASE: ${{ secrets.SERVER_SSH_PASSPHRASE }}
 
     steps:
-      - name: Check env presence
-        run: |
-          [ -n "$SSH_HOST" ] && echo "SSH_HOST OK" || echo "SSH_HOST EMPTY"
-          [ -n "$SSH_USERNAME" ] && echo "SSH_USERNAME OK" || echo "SSH_USERNAME EMPTY"
-          [ -n "$SSH_PORT" ] && echo "SSH_PORT OK" || echo "SSH_PORT EMPTY"
-          [ -n "$SSH_KEY" ] && echo "SSH_KEY OK" || echo "SSH_KEY EMPTY"
-
-      - name: Connect and deploy
+      - name: Connect and test
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ env.SSH_HOST }}
@@ -33,11 +26,44 @@ jobs:
           key: ${{ env.SSH_KEY }}
           port: ${{ env.SSH_PORT }}
           passphrase: ${{ env.SSH_PASSPHRASE }}
+          request_pty: true
+          command_timeout: 20m
           script: |
-            cd ~/atoe7739/atomverse
+            echo "LOGIN SUCCESS"
+            pwd
+            ls -la
+
+            cd ~/atomverse || cd /home/${{ env.SSH_USERNAME }}/atomverse
+
+            echo "IN PROJECT"
+            pwd
+            ls -la
+
+            php -v
+            composer --version
+            node -v
+            npm -v
+      - name: Deploy (safe)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USERNAME }}
+          key: ${{ env.SSH_KEY }}
+          port: ${{ env.SSH_PORT }}
+          passphrase: ${{ env.SSH_PASSPHRASE }}
+          request_pty: true
+          command_timeout: 20m
+          script: |
+            cd ~/atomverse || cd /home/${{ env.SSH_USERNAME }}/atomverse
+
+            echo "PULL CODE"
             git pull origin main
+
+            echo "COMPOSER INSTALL"
             composer install --no-dev --optimize-autoloader
-            npm ci
-            npm run build
+
+            echo "MIGRATE"
             php artisan migrate --force
+
+            echo "OPTIMIZE"
             php artisan optimize
