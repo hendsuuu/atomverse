@@ -17,6 +17,13 @@ jobs:
       SSH_KEY: ${{ secrets.SERVER_KEY }}
 
     steps:
+      - name: Check env presence
+        run: |
+          [ -n "$SSH_HOST" ] && echo "SSH_HOST OK" || echo "SSH_HOST EMPTY"
+          [ -n "$SSH_USERNAME" ] && echo "SSH_USERNAME OK" || echo "SSH_USERNAME EMPTY"
+          [ -n "$SSH_PORT" ] && echo "SSH_PORT OK" || echo "SSH_PORT EMPTY"
+          [ -n "$SSH_KEY" ] && echo "SSH_KEY OK" || echo "SSH_KEY EMPTY"
+           
       - name: Connect and deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
