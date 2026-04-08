@@ -16,8 +16,12 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
             <div className="relative w-full max-w-md">
                 {/* Logo */}
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl gradient-primary mb-4 shadow-lg shadow-primary-500/20">
-                        <span className="text-white font-bold text-xl">A</span>
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white border border-surface-200 mb-4 shadow">
+                        <img
+                            src="/images/Logo.png"
+                            alt="Atomverse"
+                            className="w-12 h-12 object-contain"
+                        />
                     </div>
                     <h1 className="text-2xl font-bold text-surface-900">Atomverse</h1>
                     <p className="text-surface-500 mt-1">Modern Learning Platform</p>

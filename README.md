@@ -28,6 +28,12 @@ Seed data contoh:
 php artisan db:seed
 ```
 
+Seed khusus production untuk Latihan Soal + Tes dari file DOCX (`LATIHAN SOAL.docx` dan `SOAL TES.docx`):
+
+```bash
+php artisan db:seed --class="Database\\Seeders\\Production\\ProductionAssessmentSeeder"
+```
+
 ## Akun Sample Seeder
 
 - Admin: `admin@atomverse.com` / `password`

@@ -6,9 +6,14 @@ import FormField from "@/Components/FormField";
 
 interface Question {
     id?: number;
-    type: "multiple_choice" | "drag_drop";
+    type: "multiple_choice" | "drag_drop" | "essay";
     question: string;
-    options: string[] | Record<string, string>;
+    options:
+        | string[]
+        | {
+              items: string[];
+              targets: string[];
+          };
     correct_answer: string | Record<string, string>;
     points: number;
     explanation: string;
@@ -47,8 +52,19 @@ function emptyDDQuestion(): Question {
     return {
         type: "drag_drop",
         question: "",
-        options: {},
+        options: { items: [], targets: [] },
         correct_answer: {},
+        points: 10,
+        explanation: "",
+    };
+}
+
+function emptyEssayQuestion(): Question {
+    return {
+        type: "essay",
+        question: "",
+        options: [],
+        correct_answer: "",
         points: 10,
         explanation: "",
     };
@@ -89,9 +105,15 @@ export default function ExamForm({ course, exam }: Props) {
         setData("questions", newQ);
     };
 
-    const addQuestion = (type: "multiple_choice" | "drag_drop") => {
+    const addQuestion = (
+        type: "multiple_choice" | "drag_drop" | "essay",
+    ) => {
         const q =
-            type === "multiple_choice" ? emptyMCQuestion() : emptyDDQuestion();
+            type === "multiple_choice"
+                ? emptyMCQuestion()
+                : type === "drag_drop"
+                  ? emptyDDQuestion()
+                  : emptyEssayQuestion();
         const newQ = [...data.questions, q];
         setData("questions", newQ);
         setExpandedQ((prev) => new Set(prev).add(newQ.length - 1));
@@ -238,6 +260,13 @@ export default function ExamForm({ course, exam }: Props) {
                             >
                                 + Drag & Drop
                             </button>
+                            <button
+                                type="button"
+                                onClick={() => addQuestion("essay")}
+                                className="btn-secondary btn-sm"
+                            >
+                                + Essay
+                            </button>
                         </div>
                     </div>
 
@@ -260,7 +289,9 @@ export default function ExamForm({ course, exam }: Props) {
                                     <span className="badge-primary text-xs">
                                         {q.type === "multiple_choice"
                                             ? "MC"
-                                            : "Drag & Drop"}
+                                            : q.type === "drag_drop"
+                                              ? "Drag & Drop"
+                                              : "Essay"}
                                     </span>
                                     <span className="font-medium text-sm text-surface-900 flex-1 truncate">
                                         {q.question || "New question..."}
@@ -334,7 +365,8 @@ export default function ExamForm({ course, exam }: Props) {
                                                         const type = e.target
                                                             .value as
                                                             | "multiple_choice"
-                                                            | "drag_drop";
+                                                            | "drag_drop"
+                                                            | "essay";
                                                         if (
                                                             type ===
                                                             "multiple_choice"
@@ -350,12 +382,25 @@ export default function ExamForm({ course, exam }: Props) {
                                                                 correct_answer:
                                                                     "",
                                                             });
+                                                        } else if (
+                                                            type ===
+                                                            "drag_drop"
+                                                        ) {
+                                                            updateQuestion(qi, {
+                                                                type,
+                                                                options: {
+                                                                    items: [],
+                                                                    targets: [],
+                                                                },
+                                                                correct_answer:
+                                                                    {},
+                                                            });
                                                         } else {
                                                             updateQuestion(qi, {
                                                                 type,
-                                                                options: {},
+                                                                options: [],
                                                                 correct_answer:
-                                                                    {},
+                                                                    "",
                                                             });
                                                         }
                                                     }}
@@ -365,6 +410,9 @@ export default function ExamForm({ course, exam }: Props) {
                                                     </option>
                                                     <option value="drag_drop">
                                                         Drag & Drop
+                                                    </option>
+                                                    <option value="essay">
+                                                        Essay
                                                     </option>
                                                 </select>
                                             </FormField>
@@ -408,11 +456,33 @@ export default function ExamForm({ course, exam }: Props) {
                                                 }
                                                 onChange={(pairs) => {
                                                     updateQuestion(qi, {
-                                                        options:
-                                                            Object.keys(pairs),
+                                                        options: {
+                                                            items: Object.keys(
+                                                                pairs,
+                                                            ),
+                                                            targets: Object.values(
+                                                                pairs,
+                                                            ),
+                                                        },
                                                         correct_answer: pairs,
                                                     });
                                                 }}
+                                            />
+                                        )}
+
+                                        {q.type === "essay" && (
+                                            <EssayEditor
+                                                value={
+                                                    typeof q.correct_answer ===
+                                                    "string"
+                                                        ? q.correct_answer
+                                                        : ""
+                                                }
+                                                onChange={(value) =>
+                                                    updateQuestion(qi, {
+                                                        correct_answer: value,
+                                                    })
+                                                }
                                             />
                                         )}
 
@@ -642,6 +712,29 @@ function DDEditor({
             >
                 + Add pair
             </button>
+        </div>
+    );
+}
+
+function EssayEditor({
+    value,
+    onChange,
+}: {
+    value: string;
+    onChange: (value: string) => void;
+}) {
+    return (
+        <div className="space-y-2">
+            <label className="label">Reference Answer</label>
+            <textarea
+                className="input min-h-[90px]"
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                placeholder="Tulis jawaban acuan atau poin penting soal essay"
+            />
+            <p className="text-xs text-surface-400">
+                Jawaban ini dipakai sebagai referensi pembahasan atau review.
+            </p>
         </div>
     );
 }

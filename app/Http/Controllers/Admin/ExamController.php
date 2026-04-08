@@ -41,9 +41,9 @@ class ExamController extends Controller
             'passing_score' => ['required', 'integer', 'min:0', 'max:100'],
             'time_limit_minutes' => ['nullable', 'integer', 'min:1'],
             'questions' => ['required', 'array', 'min:1'],
-            'questions.*.type' => ['required', Rule::in(['multiple_choice', 'drag_drop'])],
+            'questions.*.type' => ['required', Rule::in(['multiple_choice', 'drag_drop', 'essay'])],
             'questions.*.question' => ['required', 'string'],
-            'questions.*.options' => ['required', 'array'],
+            'questions.*.options' => ['nullable'],
             'questions.*.correct_answer' => ['required'],
             'questions.*.points' => ['required', 'integer', 'min:1'],
             'questions.*.explanation' => ['nullable', 'string'],
@@ -57,13 +57,14 @@ class ExamController extends Controller
         ]);
 
         foreach ($validated['questions'] as $index => $q) {
+            $normalized = $this->normalizeQuestionPayload($q);
             $exam->questions()->create([
-                'type' => $q['type'],
-                'question' => $q['question'],
-                'options' => $q['options'],
-                'correct_answer' => $q['correct_answer'],
-                'points' => $q['points'],
-                'explanation' => $q['explanation'] ?? null,
+                'type' => $normalized['type'],
+                'question' => $normalized['question'],
+                'options' => $normalized['options'],
+                'correct_answer' => $normalized['correct_answer'],
+                'points' => $normalized['points'],
+                'explanation' => $normalized['explanation'],
                 'sort_order' => $index,
             ]);
         }
@@ -91,9 +92,9 @@ class ExamController extends Controller
             'time_limit_minutes' => ['nullable', 'integer', 'min:1'],
             'questions' => ['required', 'array', 'min:1'],
             'questions.*.id' => ['nullable', 'integer'],
-            'questions.*.type' => ['required', Rule::in(['multiple_choice', 'drag_drop'])],
+            'questions.*.type' => ['required', Rule::in(['multiple_choice', 'drag_drop', 'essay'])],
             'questions.*.question' => ['required', 'string'],
-            'questions.*.options' => ['required', 'array'],
+            'questions.*.options' => ['nullable'],
             'questions.*.correct_answer' => ['required'],
             'questions.*.points' => ['required', 'integer', 'min:1'],
             'questions.*.explanation' => ['nullable', 'string'],
@@ -110,24 +111,25 @@ class ExamController extends Controller
         $exam->questions()->whereNotIn('id', $incomingIds)->delete();
 
         foreach ($validated['questions'] as $index => $q) {
+            $normalized = $this->normalizeQuestionPayload($q);
             if (!empty($q['id'])) {
                 ExamQuestion::where('id', $q['id'])->update([
-                    'type' => $q['type'],
-                    'question' => $q['question'],
-                    'options' => $q['options'],
-                    'correct_answer' => $q['correct_answer'],
-                    'points' => $q['points'],
-                    'explanation' => $q['explanation'] ?? null,
+                    'type' => $normalized['type'],
+                    'question' => $normalized['question'],
+                    'options' => $normalized['options'],
+                    'correct_answer' => $normalized['correct_answer'],
+                    'points' => $normalized['points'],
+                    'explanation' => $normalized['explanation'],
                     'sort_order' => $index,
                 ]);
             } else {
                 $exam->questions()->create([
-                    'type' => $q['type'],
-                    'question' => $q['question'],
-                    'options' => $q['options'],
-                    'correct_answer' => $q['correct_answer'],
-                    'points' => $q['points'],
-                    'explanation' => $q['explanation'] ?? null,
+                    'type' => $normalized['type'],
+                    'question' => $normalized['question'],
+                    'options' => $normalized['options'],
+                    'correct_answer' => $normalized['correct_answer'],
+                    'points' => $normalized['points'],
+                    'explanation' => $normalized['explanation'],
                     'sort_order' => $index,
                 ]);
             }
@@ -144,5 +146,50 @@ class ExamController extends Controller
 
         return redirect()->route('admin.courses.exams.index', $courseId)
             ->with('success', 'Final test deleted successfully.');
+    }
+
+    private function normalizeQuestionPayload(array $question): array
+    {
+        $type = $question['type'];
+
+        if ($type === 'drag_drop') {
+            $pairs = is_array($question['correct_answer']) ? $question['correct_answer'] : [];
+
+            return [
+                'type' => $type,
+                'question' => $question['question'],
+                'options' => [
+                    'items' => array_keys($pairs),
+                    'targets' => array_values($pairs),
+                ],
+                'correct_answer' => $pairs,
+                'points' => $question['points'],
+                'explanation' => $question['explanation'] ?? null,
+            ];
+        }
+
+        if ($type === 'essay') {
+            return [
+                'type' => $type,
+                'question' => $question['question'],
+                'options' => [],
+                'correct_answer' => is_string($question['correct_answer'])
+                    ? $question['correct_answer']
+                    : '',
+                'points' => $question['points'],
+                'explanation' => $question['explanation'] ?? null,
+            ];
+        }
+
+        return [
+            'type' => $type,
+            'question' => $question['question'],
+            'options' => is_array($question['options']) ? $question['options'] : [],
+            'correct_answer' => is_string($question['correct_answer'])
+                ? $question['correct_answer']
+                : '',
+            'points' => $question['points'],
+            'explanation' => $question['explanation'] ?? null,
+        ];
     }
 }

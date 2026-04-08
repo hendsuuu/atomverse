@@ -55,8 +55,12 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                 }`}
             >
                 <div className="flex items-center gap-3 px-6 py-5 border-b border-surface-100">
-                    <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">A</span>
+                    <div className="w-9 h-9 rounded-xl bg-white border border-surface-200 flex items-center justify-center overflow-hidden">
+                        <img
+                            src="/images/Logo.png"
+                            alt="Atomverse"
+                            className="w-7 h-7 object-contain"
+                        />
                     </div>
                     <span className="font-bold text-lg text-surface-900 tracking-tight">
                         Atomverse

@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState } from "react";
 
 interface DragDropGameProps {
     questionId: number;
@@ -6,10 +6,20 @@ interface DragDropGameProps {
     targets: string[];
     onAnswer: (mapping: Record<string, string>) => void;
     existingAnswer?: Record<string, string>;
+    disabled?: boolean;
 }
 
-export default function DragDropGame({ questionId, items, targets, onAnswer, existingAnswer }: DragDropGameProps) {
-    const [mapping, setMapping] = useState<Record<string, string>>(existingAnswer || {});
+export default function DragDropGame({
+    questionId,
+    items,
+    targets,
+    onAnswer,
+    existingAnswer,
+    disabled = false,
+}: DragDropGameProps) {
+    const [mapping, setMapping] = useState<Record<string, string>>(
+        existingAnswer || {},
+    );
     const [draggedItem, setDraggedItem] = useState<string | null>(null);
     const [dropTarget, setDropTarget] = useState<string | null>(null);
 
@@ -17,11 +27,18 @@ export default function DragDropGame({ questionId, items, targets, onAnswer, exi
     const assignedItems = Object.keys(mapping);
     const unassignedItems = items.filter((item) => !assignedItems.includes(item));
 
+    const commitMapping = (nextMapping: Record<string, string>) => {
+        setMapping(nextMapping);
+        onAnswer(nextMapping);
+    };
+
     const handleDragStart = (item: string) => {
+        if (disabled) return;
         setDraggedItem(item);
     };
 
     const handleDragOver = (e: React.DragEvent, target: string) => {
+        if (disabled) return;
         e.preventDefault();
         setDropTarget(target);
     };
@@ -31,43 +48,42 @@ export default function DragDropGame({ questionId, items, targets, onAnswer, exi
     };
 
     const handleDrop = (target: string) => {
+        if (disabled) return;
         if (draggedItem) {
             const newMapping = { ...mapping };
-            // Remove from old target if exists
             Object.entries(newMapping).forEach(([key, val]) => {
                 if (val === target) delete newMapping[key];
             });
             newMapping[draggedItem] = target;
-            setMapping(newMapping);
-            onAnswer(newMapping);
+            commitMapping(newMapping);
         }
         setDraggedItem(null);
         setDropTarget(null);
     };
 
     const removeMapping = (item: string) => {
+        if (disabled) return;
         const newMapping = { ...mapping };
         delete newMapping[item];
-        setMapping(newMapping);
-        onAnswer(newMapping);
+        commitMapping(newMapping);
     };
 
-    // Mobile touch support
     const [touchItem, setTouchItem] = useState<string | null>(null);
 
     const handleTouchSelect = (item: string) => {
+        if (disabled) return;
         setTouchItem(item);
     };
 
     const handleTouchTarget = (target: string) => {
+        if (disabled) return;
         if (touchItem) {
             const newMapping = { ...mapping };
             Object.entries(newMapping).forEach(([key, val]) => {
                 if (val === target) delete newMapping[key];
             });
             newMapping[touchItem] = target;
-            setMapping(newMapping);
-            onAnswer(newMapping);
+            commitMapping(newMapping);
             setTouchItem(null);
         }
     };

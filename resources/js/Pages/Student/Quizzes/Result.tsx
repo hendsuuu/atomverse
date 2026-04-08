@@ -2,8 +2,9 @@ import { Head, Link } from '@inertiajs/react';
 
 interface QuizQuestion {
     id: number;
-    type: 'multiple_choice' | 'drag_drop';
+    type: 'multiple_choice' | 'drag_drop' | 'essay';
     question: string;
+    image_path?: string | null;
     options: any;
     correct_answer: any;
     points: number;
@@ -34,10 +35,6 @@ interface Props {
 
 export default function QuizResult({ attempt }: Props) {
     const { quiz } = attempt;
-    const percentage = attempt.total_points > 0
-        ? Math.round((attempt.score / attempt.total_points) * 100)
-        : 0;
-    const passed = percentage >= quiz.passing_score;
 
     const getAnswerStatus = (question: QuizQuestion): 'correct' | 'wrong' | 'unanswered' => {
         const userAnswer = attempt.answers?.[question.id];
@@ -56,51 +53,31 @@ export default function QuizResult({ attempt }: Props) {
             return allCorrect ? 'correct' : 'wrong';
         }
 
+        if (question.type === 'essay') {
+            return typeof userAnswer === 'string' && userAnswer.trim() !== ''
+                ? 'correct'
+                : 'unanswered';
+        }
+
         return 'unanswered';
     };
-
-    const correctCount = quiz.questions.filter((q) => getAnswerStatus(q) === 'correct').length;
 
     return (
         <div className="min-h-screen bg-surface-50">
             <Head title={`Hasil — ${quiz.title}`} />
 
             <div className="max-w-3xl mx-auto px-4 py-8 sm:py-12">
-                {/* Score card */}
-                <div className={`card p-8 text-center mb-8 ${
-                    passed ? 'border-success-300' : 'border-danger-300'
-                } border-2`}>
-                    <div className={`w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center ${
-                        passed
-                            ? 'bg-gradient-to-br from-emerald-400 to-emerald-600'
-                            : 'bg-gradient-to-br from-red-400 to-red-600'
-                    }`}>
-                        <span className="text-white text-3xl font-bold">{percentage}%</span>
+                <div className="card p-8 text-center mb-8 border-2 border-primary-200">
+                    <div className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center bg-gradient-to-br from-primary-400 to-primary-600">
+                        <span className="text-white text-3xl">📝</span>
                     </div>
 
                     <h1 className="text-2xl font-bold text-surface-900 mb-2">
-                        {passed ? '🎉 Selamat! Kamu Lulus!' : '😔 Belum Lulus'}
+                        Latihan Selesai
                     </h1>
-                    <p className="text-surface-500 mb-4">
-                        {passed
-                            ? 'Kamu berhasil mencapai skor minimum.'
-                            : `Kamu perlu skor minimal ${quiz.passing_score}% untuk lulus.`}
+                    <p className="text-surface-500">
+                        Tidak ada skor akhir untuk latihan ini. Kamu bisa melihat feedback per soal di bawah.
                     </p>
-
-                    <div className="flex justify-center gap-8 text-sm">
-                        <div className="text-center">
-                            <p className="text-xl font-bold text-surface-900">{attempt.score}/{attempt.total_points}</p>
-                            <p className="text-surface-500">Skor</p>
-                        </div>
-                        <div className="text-center">
-                            <p className="text-xl font-bold text-success-600">{correctCount}</p>
-                            <p className="text-surface-500">Benar</p>
-                        </div>
-                        <div className="text-center">
-                            <p className="text-xl font-bold text-danger-600">{quiz.questions.length - correctCount}</p>
-                            <p className="text-surface-500">Salah</p>
-                        </div>
-                    </div>
                 </div>
 
                 {/* Review */}
@@ -124,9 +101,19 @@ export default function QuizResult({ attempt }: Props) {
                                     </span>
                                     <div className="flex-1">
                                         <p className="text-sm font-medium text-surface-900">{question.question}</p>
-                                        <p className="text-xs text-surface-400 mt-1">{question.points} poin</p>
+                                        <p className="text-xs text-surface-400 mt-1">{question.type === 'essay' ? 'Essay' : `${question.points} poin`}</p>
                                     </div>
                                 </div>
+
+                                {question.image_path && (
+                                    <div className="ml-10 mb-3 rounded-lg border border-surface-200 bg-white p-2">
+                                        <img
+                                            src={`/${question.image_path}`}
+                                            alt={`Soal ${i + 1}`}
+                                            className="w-full max-h-72 object-contain rounded"
+                                        />
+                                    </div>
+                                )}
 
                                 {question.type === 'multiple_choice' && (
                                     <div className="ml-10 space-y-1.5">
@@ -166,6 +153,21 @@ export default function QuizResult({ attempt }: Props) {
                                                 </div>
                                             );
                                         })}
+                                    </div>
+                                )}
+
+                                {question.type === 'essay' && (
+                                    <div className="ml-10 space-y-2 text-sm">
+                                        <div className="rounded-lg bg-surface-50 p-3 text-surface-700">
+                                            <p className="font-medium mb-1">Jawaban kamu:</p>
+                                            <p>{(userAnswer as string) || 'Belum dijawab.'}</p>
+                                        </div>
+                                        {question.correct_answer && (
+                                            <div className="rounded-lg bg-success-50 p-3 text-success-800">
+                                                <p className="font-medium mb-1">Contoh jawaban:</p>
+                                                <p>{question.correct_answer as string}</p>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
 

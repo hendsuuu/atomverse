@@ -78,22 +78,19 @@ class LearningMenuController extends Controller
         $attemptsByQuiz = QuizAttempt::where('user_id', $userId)
             ->whereIn('quiz_id', $quizzes->pluck('id'))
             ->whereNotNull('completed_at')
-            ->orderByDesc('score')
+            ->orderByDesc('completed_at')
             ->get()
             ->groupBy('quiz_id');
 
         $practiceItems = $quizzes->map(function (Quiz $quiz) use ($attemptsByQuiz) {
-            $bestAttempt = $attemptsByQuiz->get($quiz->id)?->first();
-            $percentage = $bestAttempt && $bestAttempt->total_points > 0
-                ? round(($bestAttempt->score / $bestAttempt->total_points) * 100)
-                : null;
+            $attempts = $attemptsByQuiz->get($quiz->id) ?? collect();
+            $latestAttempt = $attempts->first();
 
             return [
                 'id' => $quiz->id,
                 'title' => $quiz->title,
                 'description' => $quiz->description,
                 'questions_count' => $quiz->questions_count,
-                'passing_score' => $quiz->passing_score,
                 'time_limit_minutes' => $quiz->time_limit_minutes,
                 'material' => [
                     'title' => $quiz->material?->title,
@@ -103,12 +100,9 @@ class LearningMenuController extends Controller
                     'title' => $quiz->material?->course?->title,
                     'slug' => $quiz->material?->course?->slug,
                 ],
-                'best_attempt' => $bestAttempt ? [
-                    'score' => $bestAttempt->score,
-                    'total_points' => $bestAttempt->total_points,
-                    'percentage' => $percentage,
-                    'passed' => $percentage !== null && $percentage >= $quiz->passing_score,
-                    'completed_at' => $bestAttempt->completed_at?->toDateTimeString(),
+                'latest_attempt' => $latestAttempt ? [
+                    'completed_at' => $latestAttempt->completed_at?->toDateTimeString(),
+                    'attempts_count' => $attempts->count(),
                 ] : null,
             ];
         });

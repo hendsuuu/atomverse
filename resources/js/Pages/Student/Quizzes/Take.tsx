@@ -4,9 +4,12 @@ import DragDropGame from "@/Components/DragDropGame";
 
 interface QuizQuestion {
     id: number;
-    type: "multiple_choice" | "drag_drop";
+    type: "multiple_choice" | "drag_drop" | "essay";
     question: string;
+    image_path?: string | null;
     options: any;
+    correct_answer: any;
+    explanation?: string | null;
     points: number;
     sort_order: number;
 }
@@ -36,17 +39,18 @@ interface QuizAttempt {
 interface Props {
     quiz: Quiz;
     previousAttempts: QuizAttempt[];
-    bestAttempt: QuizAttempt | null;
+    completedAttemptsCount: number;
 }
 
 export default function QuizTake({
     quiz,
     previousAttempts,
-    bestAttempt,
+    completedAttemptsCount,
 }: Props) {
     const [started, setStarted] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [answers, setAnswers] = useState<Record<number, any>>({});
+    const [feedbackVisible, setFeedbackVisible] = useState<Record<number, boolean>>({});
     const [submitting, setSubmitting] = useState(false);
     const [timeLeft, setTimeLeft] = useState(
         quiz.time_limit_minutes ? quiz.time_limit_minutes * 60 : null,
@@ -54,11 +58,35 @@ export default function QuizTake({
 
     const question = quiz.questions[currentQuestion];
     const totalQuestions = quiz.questions.length;
-    const answered = Object.keys(answers).length;
+    const answered = quiz.questions.filter((q) => {
+        const answer = answers[q.id];
+        if (q.type === "essay") {
+            return typeof answer === "string" && answer.trim() !== "";
+        }
 
-    const setAnswer = useCallback((questionId: number, answer: any) => {
-        setAnswers((prev) => ({ ...prev, [questionId]: answer }));
-    }, []);
+        return answer !== undefined;
+    }).length;
+
+    const setAnswer = useCallback(
+        (questionId: number, answer: any, showFeedback = false) => {
+            setAnswers((prev) => ({ ...prev, [questionId]: answer }));
+
+            if (showFeedback) {
+                setFeedbackVisible((prev) => ({ ...prev, [questionId]: true }));
+            }
+        },
+        [],
+    );
+
+    const resolveMultipleChoiceStatus = (q: QuizQuestion) => {
+        const answer = answers[q.id];
+
+        if (answer === undefined) {
+            return null;
+        }
+
+        return answer === q.correct_answer ? "correct" : "wrong";
+    };
 
     const handleSubmit = useCallback(() => {
         setSubmitting(true);
@@ -77,7 +105,6 @@ export default function QuizTake({
         return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
     };
 
-    // Timer
     const handleSubmitRef = useRef(handleSubmit);
     handleSubmitRef.current = handleSubmit;
 
@@ -96,7 +123,6 @@ export default function QuizTake({
         return () => clearInterval(interval);
     }, [started]);
 
-    // ── Pre-start screen ──
     if (!started) {
         return (
             <div className="min-h-screen bg-surface-50 flex items-center justify-center p-4">
@@ -124,9 +150,9 @@ export default function QuizTake({
                             </div>
                             <div className="text-center">
                                 <p className="text-2xl font-bold text-primary-600">
-                                    {quiz.passing_score}%
+                                    Instan
                                 </p>
-                                <p className="text-surface-500">KKM</p>
+                                <p className="text-surface-500">Feedback</p>
                             </div>
                             {quiz.time_limit_minutes && (
                                 <div className="text-center">
@@ -138,20 +164,10 @@ export default function QuizTake({
                             )}
                         </div>
 
-                        {bestAttempt && (
+                        {completedAttemptsCount > 0 && (
                             <div className="bg-surface-50 rounded-xl p-4 mb-6">
                                 <p className="text-sm text-surface-600">
-                                    Skor terbaik:{" "}
-                                    <span className="font-bold text-primary-600">
-                                        {Math.round(
-                                            (bestAttempt.score /
-                                                bestAttempt.total_points) *
-                                                100,
-                                        )}
-                                        %
-                                    </span>
-                                    ({bestAttempt.score}/
-                                    {bestAttempt.total_points})
+                                    Kamu sudah pernah mengerjakan latihan ini.
                                 </p>
                                 <p className="text-xs text-surface-400 mt-1">
                                     {previousAttempts.length} percobaan
@@ -179,12 +195,10 @@ export default function QuizTake({
         );
     }
 
-    // ── Quiz in progress ──
     return (
         <div className="min-h-screen bg-surface-50">
             <Head title={`${quiz.title} — Soal ${currentQuestion + 1}`} />
 
-            {/* Header */}
             <header className="sticky top-0 z-30 bg-white/90 glass border-b border-surface-200/60">
                 <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
                     <div className="flex items-center gap-3 min-w-0">
@@ -210,7 +224,6 @@ export default function QuizTake({
                     </div>
                 </div>
 
-                {/* Progress bar */}
                 <div className="h-1 bg-surface-100">
                     <div
                         className="h-full bg-gradient-to-r from-primary-500 to-accent-500 transition-all"
@@ -222,7 +235,6 @@ export default function QuizTake({
             </header>
 
             <main className="max-w-3xl mx-auto px-4 py-8">
-                {/* Question card */}
                 <div
                     className="card p-6 sm:p-8 mb-6 animate-slide-up"
                     key={question.id}
@@ -235,7 +247,9 @@ export default function QuizTake({
                             {question.points} poin ·{" "}
                             {question.type === "drag_drop"
                                 ? "Drag & Drop"
-                                : "Pilihan Ganda"}
+                                : question.type === "essay"
+                                  ? "Essay"
+                                  : "Pilihan Ganda"}
                         </span>
                     </div>
 
@@ -243,13 +257,23 @@ export default function QuizTake({
                         {question.question}
                     </h2>
 
+                    {question.image_path && (
+                        <div className="mb-6 rounded-xl border border-surface-200 bg-white p-3">
+                            <img
+                                src={`/${question.image_path}`}
+                                alt={`Soal ${currentQuestion + 1}`}
+                                className="w-full max-h-80 object-contain rounded-lg"
+                            />
+                        </div>
+                    )}
+
                     {question.type === "multiple_choice" && (
                         <div className="space-y-3">
                             {(question.options as string[]).map((option, i) => (
                                 <button
                                     key={i}
                                     onClick={() =>
-                                        setAnswer(question.id, option)
+                                        setAnswer(question.id, option, true)
                                     }
                                     className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
                                         answers[question.id] === option
@@ -279,6 +303,32 @@ export default function QuizTake({
                         </div>
                     )}
 
+                    {question.type === "essay" && (
+                        <div className="space-y-3">
+                            <textarea
+                                value={answers[question.id] ?? ""}
+                                onChange={(e) =>
+                                    setAnswer(question.id, e.target.value)
+                                }
+                                className="w-full min-h-36 rounded-xl border-2 border-surface-200 focus:border-primary-400 focus:ring-0"
+                                placeholder="Tulis jawaban kamu di sini..."
+                            />
+                            <button
+                                type="button"
+                                className="btn-secondary"
+                                disabled={!answers[question.id] || (typeof answers[question.id] === 'string' && answers[question.id].trim() === '')}
+                                onClick={() =>
+                                    setFeedbackVisible((prev) => ({
+                                        ...prev,
+                                        [question.id]: true,
+                                    }))
+                                }
+                            >
+                                Tampilkan Feedback
+                            </button>
+                        </div>
+                    )}
+
                     {question.type === "drag_drop" && (
                         <DragDropGame
                             questionId={question.id}
@@ -290,9 +340,48 @@ export default function QuizTake({
                             existingAnswer={answers[question.id]}
                         />
                     )}
+
+                    {feedbackVisible[question.id] &&
+                        question.type === "multiple_choice" &&
+                        (() => {
+                            const status = resolveMultipleChoiceStatus(question);
+
+                            if (!status) {
+                                return null;
+                            }
+
+                            return (
+                                <div
+                                    className={`mt-4 rounded-xl p-4 text-sm ${
+                                        status === "correct"
+                                            ? "bg-success-50 text-success-800"
+                                            : "bg-danger-50 text-danger-800"
+                                    }`}
+                                >
+                                    <p className="font-semibold mb-1">
+                                        {status === "correct"
+                                            ? "Jawaban kamu benar"
+                                            : "Jawaban kamu belum tepat"}
+                                    </p>
+                                    {question.explanation && (
+                                        <p>{question.explanation}</p>
+                                    )}
+                                </div>
+                            );
+                        })()}
+
+                    {feedbackVisible[question.id] &&
+                        question.type === "essay" &&
+                        question.explanation && (
+                            <div className="mt-4 rounded-xl p-4 text-sm bg-primary-50 text-primary-800">
+                                <p className="font-semibold mb-1">
+                                    Feedback Soal Essay
+                                </p>
+                                <p>{question.explanation}</p>
+                            </div>
+                        )}
                 </div>
 
-                {/* Navigation */}
                 <div className="flex items-center justify-between">
                     <button
                         onClick={() =>
@@ -319,12 +408,11 @@ export default function QuizTake({
                             disabled={submitting}
                             className="btn-primary bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700"
                         >
-                            {submitting ? "Mengirim..." : "✓ Selesai & Kirim"}
+                            {submitting ? "Menyimpan..." : "✓ Selesai Latihan"}
                         </button>
                     )}
                 </div>
 
-                {/* Question dots */}
                 <div className="flex items-center justify-center gap-2 mt-8">
                     {quiz.questions.map((q, i) => (
                         <button

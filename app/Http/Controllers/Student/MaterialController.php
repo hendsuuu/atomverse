@@ -38,7 +38,7 @@ class MaterialController extends Controller
                 $bestAttempt = QuizAttempt::where('quiz_id', $quiz->id)
                     ->where('user_id', $user->id)
                     ->whereNotNull('completed_at')
-                    ->orderByDesc('score')
+                    ->orderByDesc('completed_at')
                     ->first();
 
                 return [
@@ -46,16 +46,9 @@ class MaterialController extends Controller
                     'title' => $quiz->title,
                     'description' => $quiz->description,
                     'questions_count' => $quiz->questions_count,
-                    'passing_score' => $quiz->passing_score,
                     'time_limit_minutes' => $quiz->time_limit_minutes,
-                    'best_score' => $bestAttempt ? [
-                        'score' => $bestAttempt->score,
-                        'total_points' => $bestAttempt->total_points,
-                        'percentage' => $bestAttempt->total_points > 0
-                            ? round(($bestAttempt->score / $bestAttempt->total_points) * 100)
-                            : 0,
-                        'passed' => $bestAttempt->total_points > 0 &&
-                            (($bestAttempt->score / $bestAttempt->total_points) * 100) >= $quiz->passing_score,
+                    'latest_attempt' => $bestAttempt ? [
+                        'completed_at' => $bestAttempt->completed_at?->toDateTimeString(),
                     ] : null,
                 ];
             });

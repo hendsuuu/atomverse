@@ -37,14 +37,6 @@ class HistoryController extends Controller
                 'quiz_title' => $a->quiz->title,
                 'material_title' => $a->quiz->material->title ?? '-',
                 'course_title' => $a->quiz->material->course->title ?? '-',
-                'score' => $a->score,
-                'total_points' => $a->total_points,
-                'percentage' => $a->total_points > 0
-                    ? round(($a->score / $a->total_points) * 100)
-                    : 0,
-                'passed' => $a->total_points > 0
-                    ? round(($a->score / $a->total_points) * 100) >= $a->quiz->passing_score
-                    : false,
                 'completed_at' => $a->completed_at?->toDateTimeString(),
             ]);
 
@@ -70,10 +62,9 @@ class HistoryController extends Controller
 
         // Progress stats
         $totalQuizAttempts = $quizAttempts->count();
-        $passedQuizzes = $quizAttempts->where('passed', true)->count();
+        $completedQuizTopics = $quizAttempts->pluck('quiz_title')->filter()->unique()->count();
         $totalExamAttempts = $examAttempts->count();
         $passedExams = $examAttempts->where('passed', true)->count();
-        $avgQuizScore = $quizAttempts->avg('percentage') ?? 0;
         $avgExamScore = $examAttempts->avg('percentage') ?? 0;
 
         return Inertia::render('Student/History', [
@@ -88,10 +79,9 @@ class HistoryController extends Controller
             'stats' => [
                 'total_courses' => $courses->count(),
                 'total_quiz_attempts' => $totalQuizAttempts,
-                'passed_quizzes' => $passedQuizzes,
+                'completed_quiz_topics' => $completedQuizTopics,
                 'total_exam_attempts' => $totalExamAttempts,
                 'passed_exams' => $passedExams,
-                'avg_quiz_score' => round($avgQuizScore),
                 'avg_exam_score' => round($avgExamScore),
             ],
         ]);

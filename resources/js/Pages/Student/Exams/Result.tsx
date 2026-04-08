@@ -2,8 +2,9 @@ import { Head, Link } from "@inertiajs/react";
 
 interface ExamQuestion {
     id: number;
-    type: "multiple_choice" | "drag_drop";
+    type: "multiple_choice" | "drag_drop" | "essay";
     question: string;
+    image_path?: string | null;
     options: any;
     correct_answer: any;
     points: number;
@@ -57,6 +58,12 @@ export default function ExamResult({ attempt }: Props) {
                 ([key, val]) => user[key] === val,
             );
             return allCorrect ? "correct" : "wrong";
+        }
+
+        if (question.type === "essay") {
+            return typeof userAnswer === "string" && userAnswer.trim() !== ""
+                ? "correct"
+                : "unanswered";
         }
 
         return "unanswered";
@@ -168,6 +175,16 @@ export default function ExamResult({ attempt }: Props) {
                                     </div>
                                 </div>
 
+                                {question.image_path && (
+                                    <div className="ml-10 mb-3 rounded-lg border border-surface-200 bg-white p-2">
+                                        <img
+                                            src={`/${question.image_path}`}
+                                            alt={`Soal ${i + 1}`}
+                                            className="w-full max-h-72 object-contain rounded"
+                                        />
+                                    </div>
+                                )}
+
                                 {question.type === "multiple_choice" && (
                                     <div className="ml-10 space-y-1.5">
                                         {(question.options as string[]).map(
@@ -243,6 +260,21 @@ export default function ExamResult({ attempt }: Props) {
                                                 </div>
                                             );
                                         })}
+                                    </div>
+                                )}
+
+                                {question.type === "essay" && (
+                                    <div className="ml-10 space-y-2 text-sm">
+                                        <div className="rounded-lg bg-surface-50 p-3 text-surface-700">
+                                            <p className="font-medium mb-1">Jawaban kamu:</p>
+                                            <p>{(userAnswer as string) || "Belum dijawab."}</p>
+                                        </div>
+                                        {question.correct_answer && (
+                                            <div className="rounded-lg bg-success-50 p-3 text-success-800">
+                                                <p className="font-medium mb-1">Kunci/Referensi Jawaban:</p>
+                                                <p>{question.correct_answer as string}</p>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
 

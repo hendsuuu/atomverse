@@ -97,11 +97,11 @@ export default function Welcome() {
         },
         {
             q: "Bagaimana format pembelajaran di AtomVerse?",
-            a: "Pembelajaran dilakukan secara online, fleksibel sesuai waktu kamu. Terdiri dari video materi HD, modul baca interaktif, kuis, dan sesi live mentoring bersama instruktur berpengalaman setiap bulannya.",
+            a: "Pembelajaran dilakukan secara online dan fleksibel. Terdiri dari modul baca interaktif dilengkapi game drag & drop, latihan soal dengan feedback langsung, serta tes evaluasi untuk mengukur pemahaman. Semua hasil tercatat di riwayat belajar.",
         },
         {
             q: "Apakah bisa belajar dari perangkat mobile?",
-            a: "Tentu! Platform AtomVerse sepenuhnya responsif dan dapat diakses dari smartphone, tablet, maupun laptop. Kamu juga bisa mengunduh materi untuk belajar secara offline.",
+            a: "Tentu! Platform AtomVerse sepenuhnya responsif dan dapat diakses dari smartphone, tablet, maupun laptop.",
         },
     ];
 
@@ -238,53 +238,11 @@ export default function Welcome() {
                             href="#home"
                             className="flex items-center gap-2.5 text-[#082544]"
                         >
-                            <svg
-                                className="h-[38px] w-[38px] shrink-0"
-                                viewBox="0 0 42 42"
-                                fill="none"
-                            >
-                                <ellipse
-                                    cx="21"
-                                    cy="21"
-                                    rx="19"
-                                    ry="7"
-                                    stroke="#1B7FE8"
-                                    strokeWidth="1.7"
-                                />
-                                <ellipse
-                                    cx="21"
-                                    cy="21"
-                                    rx="19"
-                                    ry="7"
-                                    stroke="#1B7FE8"
-                                    strokeWidth="1.7"
-                                    transform="rotate(60 21 21)"
-                                />
-                                <ellipse
-                                    cx="21"
-                                    cy="21"
-                                    rx="19"
-                                    ry="7"
-                                    stroke="#1B7FE8"
-                                    strokeWidth="1.7"
-                                    transform="rotate(-60 21 21)"
-                                />
-                                <circle cx="21" cy="21" r="4.5" fill="#082544" />
-                                <circle
-                                    cx="19.5"
-                                    cy="20"
-                                    r="2.5"
-                                    fill="#1B7FE8"
-                                    opacity=".85"
-                                />
-                                <circle
-                                    cx="22.5"
-                                    cy="22"
-                                    r="2.5"
-                                    fill="#38ADEE"
-                                    opacity=".85"
-                                />
-                            </svg>
+                            <img
+                                src="/images/Logo.png"
+                                alt="AtomVerse Logo"
+                                className="h-[38px] w-auto shrink-0"
+                            />
 
                             <span className="font-fraunces text-xl font-extrabold tracking-tight">
                                 Atom
@@ -799,11 +757,11 @@ export default function Welcome() {
                             <div className="absolute left-[14%] right-[14%] top-[27px] hidden h-[2px] bg-[#C6DFF6] md:block"></div>
 
                             {[
-                                ["01", "Daftar Akun", "Buat akun gratis dalam hitungan detik tanpa kartu kredit.", "#082544"],
-                                ["02", "Pilih Materi", "Telusuri kurikulum dan tentukan topik yang ingin kamu kuasai.", "#1B7FE8"],
-                                ["03", "Ikuti Kelas", "Belajar lewat video, modul, dan sesi tanya jawab bersama mentor.", "#1B7FE8"],
-                                ["04", "Ujian & Evaluasi", "Uji pemahamanmu dengan soal latihan dan ujian akhir modul.", "#1B7FE8"],
-                                ["05", "Raih Sertifikat", "Dapatkan sertifikat resmi yang dapat kamu bagikan ke LinkedIn.", "#0D5CB3"],
+                                ["01", "Buka Menu Utama", "Setelah login, halaman pertama yang tampil adalah Menu Utama dengan tujuh menu pembelajaran.", "#082544"],
+                                ["02", "Pelajari Materi", "Buka menu Materi untuk membaca isi pembelajaran dan memainkan game interaktif di dalamnya.", "#1B7FE8"],
+                                ["03", "Kerjakan Latihan", "Setelah memahami materi, buka menu Latihan Soal atau kerjakan kuis di akhir halaman materi.", "#1B7FE8"],
+                                ["04", "Selesaikan Tes", "Masuk ke menu Tes untuk mengerjakan evaluasi dengan soal yang lebih banyak hingga selesai.", "#1B7FE8"],
+                                ["05", "Pantau Riwayat", "Buka Riwayat Belajar untuk melihat hasil latihan soal dan tes yang sudah kamu kerjakan.", "#0D5CB3"],
                             ].map(([num, title, desc, bg], idx) => (
                                 <div
                                     key={num}
@@ -854,34 +812,43 @@ export default function Welcome() {
                             </a>
                         </div>
 
-                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
                             {[
                                 {
-                                    image: "https://images.unsplash.com/photo-1507668077129-56e32842fceb?w=600&q=80",
-                                    alt: "Struktur Atom",
-                                    level: "Dasar",
-                                    title: "Struktur Atom & Tabel Periodik",
-                                    desc: "Pelajari susunan atom, proton, neutron, elektron, serta cara membaca tabel periodik unsur secara lengkap.",
-                                    jam: "8 Jam",
-                                    rating: "4.9",
+                                    image: "https://plus.unsplash.com/premium_photo-1669700572390-91eb6d2fbe89?w=600&q=80",
+                                    alt: "Perkembangan Model Atom",
+                                    level: "Materi 1",
+                                    title: "Perkembangan Model Atom",
+                                    desc: "Model atom Dalton, Thomson, Rutherford, Bohr, hingga model atom mekanika kuantum modern.",
+                                    jam: "30 Menit",
+                                    modul: "6 Bab",
                                 },
                                 {
-                                    image: "https://images.unsplash.com/photo-1614935151651-0bea6508db6b?w=600&q=80",
-                                    alt: "Ikatan Kimia",
-                                    level: "Menengah",
-                                    title: "Ikatan Kimia & Molekul",
-                                    desc: "Memahami ikatan ion, kovalen, dan logam; serta cara pembentukan molekul dan senyawa dalam reaksi kimia.",
-                                    jam: "6 Jam",
-                                    rating: "4.8",
+                                    image: "https://images.unsplash.com/photo-1737733187755-ebac39ea79e1?w=600&q=80",
+                                    alt: "Partikel Penyusun Atom",
+                                    level: "Materi 2",
+                                    title: "Partikel Penyusun Atom",
+                                    desc: "Proton, elektron, neutron, notasi atom, serta konsep isotop, isobar, dan isoton.",
+                                    jam: "30 Menit",
+                                    modul: "5 Bab",
                                 },
                                 {
-                                    image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=600&q=80",
-                                    alt: "Reaksi Kimia",
-                                    level: "Lanjutan",
-                                    title: "Reaksi Kimia & Stoikiometri",
-                                    desc: "Kupas tuntas hukum kekekalan massa, persamaan reaksi, dan perhitungan stoikiometri dalam kimia.",
-                                    jam: "10 Jam",
-                                    rating: "4.9",
+                                    image: "https://media.istockphoto.com/id/187566822/id/foto/atom.jpg?s=2048x2048&w=is&k=20&c=fr6ZzX8Xdyy0X4RcGhzFmt8sdX6mCj2uC_6vw228efI=",
+                                    alt: "Konfigurasi Elektron",
+                                    level: "Materi 3",
+                                    title: "Konfigurasi Elektron",
+                                    desc: "Konfigurasi elektron model Bohr dan mekanika kuantum dengan prinsip Aufbau.",
+                                    jam: "30 Menit",
+                                    modul: "2 Bab",
+                                },
+                                {
+                                    image: "https://images.unsplash.com/photo-1666112835156-c65bb806ac73",
+                                    alt: "Bilangan Kuantum",
+                                    level: "Materi 4",
+                                    title: "Bilangan Kuantum",
+                                    desc: "Bilangan kuantum utama (n), azimut (l), magnetik (m), dan spin (s) dalam atom.",
+                                    jam: "30 Menit",
+                                    modul: "4 Bab",
                                 },
                             ].map((item, idx) => (
                                 <div
@@ -917,7 +884,7 @@ export default function Welcome() {
                                                 ⏱ {item.jam}
                                             </span>
                                             <span className="flex items-center gap-1.5 text-[0.75rem] font-semibold text-[#7A90A8]">
-                                                ⭐ {item.rating}
+                                                {/* 📖 {item.modul} */}
                                             </span>
                                         </div>
                                     </div>
@@ -1050,50 +1017,11 @@ export default function Welcome() {
                         <div className="mb-7 flex justify-between gap-12 border-b border-[rgba(255,255,255,0.1)] pb-12 lg:flex-row flex-col">
                             <div className="w-4/8">
                                 <div className="flex items-center gap-2.5 text-white">
-                                    <svg
-                                        className="h-[38px] w-[38px] shrink-0"
-                                        viewBox="0 0 42 42"
-                                        fill="none"
-                                    >
-                                        <ellipse
-                                            cx="21"
-                                            cy="21"
-                                            rx="19"
-                                            ry="7"
-                                            stroke="#1B7FE8"
-                                            strokeWidth="1.7"
-                                        />
-                                        <ellipse
-                                            cx="21"
-                                            cy="21"
-                                            rx="19"
-                                            ry="7"
-                                            stroke="#1B7FE8"
-                                            strokeWidth="1.7"
-                                            transform="rotate(60 21 21)"
-                                        />
-                                        <ellipse
-                                            cx="21"
-                                            cy="21"
-                                            rx="19"
-                                            ry="7"
-                                            stroke="#1B7FE8"
-                                            strokeWidth="1.7"
-                                            transform="rotate(-60 21 21)"
-                                        />
-                                        <circle
-                                            cx="21"
-                                            cy="21"
-                                            r="4.5"
-                                            fill="#1B7FE8"
-                                        />
-                                        <circle
-                                            cx="39.5"
-                                            cy="21"
-                                            r="2.2"
-                                            fill="#38ADEE"
-                                        />
-                                    </svg>
+                                    <img
+                                        src="/images/Logo.png"
+                                        alt="AtomVerse Logo"
+                                        className="h-[38px] w-auto shrink-0"
+                                    />
 
                                     <span className="font-fraunces text-xl font-extrabold tracking-tight">
                                         Atom

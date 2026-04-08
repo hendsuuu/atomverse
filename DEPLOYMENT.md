@@ -567,6 +567,16 @@ Banyak hosting menyediakan terminal di cPanel (cPanel → Terminal). Gunakan itu
 
 ## 11. Post-Deploy: Migrasi & Optimasi
 
+### Seed Assessment Production (Latihan + Tes dari DOCX)
+
+Pastikan file `LATIHAN SOAL.docx` dan `SOAL TES.docx` ada di root project server, lalu jalankan:
+
+```bash
+php artisan db:seed --class="Database\\Seeders\\Production\\ProductionAssessmentSeeder"
+```
+
+Seeder ini tidak memakai seeder demo default, sehingga aman dipakai untuk kebutuhan konten production assessment.
+
 ### 11.1 Migrasi Database
 
 ```bash

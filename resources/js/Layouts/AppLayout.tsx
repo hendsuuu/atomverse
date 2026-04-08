@@ -49,10 +49,12 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
                                 href="/dashboard"
                                 className="flex items-center gap-2.5"
                             >
-                                <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-                                    <span className="text-white font-bold text-sm">
-                                        A
-                                    </span>
+                                <div className="w-8 h-8 rounded-lg bg-white border border-surface-200 flex items-center justify-center overflow-hidden">
+                                    <img
+                                        src="/images/Logo.png"
+                                        alt="Atomverse"
+                                        className="w-6 h-6 object-contain"
+                                    />
                                 </div>
                                 <span className="font-bold text-lg text-surface-900 tracking-tight hidden sm:block">
                                     Atomverse

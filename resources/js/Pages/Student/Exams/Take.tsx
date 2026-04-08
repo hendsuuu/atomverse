@@ -4,8 +4,9 @@ import DragDropGame from "@/Components/DragDropGame";
 
 interface ExamQuestion {
     id: number;
-    type: "multiple_choice" | "drag_drop";
+    type: "multiple_choice" | "drag_drop" | "essay";
     question: string;
+    image_path?: string | null;
     options: any;
     points: number;
     sort_order: number;
@@ -53,7 +54,14 @@ export default function ExamTake({
 
     const question = exam.questions[currentQuestion];
     const totalQuestions = exam.questions.length;
-    const answered = Object.keys(answers).length;
+    const answered = exam.questions.filter((q) => {
+        const answer = answers[q.id];
+        if (q.type === "essay") {
+            return typeof answer === "string" && answer.trim() !== "";
+        }
+
+        return answer !== undefined;
+    }).length;
 
     const setAnswer = useCallback((questionId: number, answer: any) => {
         setAnswers((prev) => ({ ...prev, [questionId]: answer }));
@@ -235,13 +243,25 @@ export default function ExamTake({
                             {question.points} poin ·{" "}
                             {question.type === "drag_drop"
                                 ? "Drag & Drop"
-                                : "Pilihan Ganda"}
+                                : question.type === "essay"
+                                  ? "Essay"
+                                  : "Pilihan Ganda"}
                         </span>
                     </div>
 
                     <h2 className="text-lg font-semibold text-surface-900 mb-6">
                         {question.question}
                     </h2>
+
+                    {question.image_path && (
+                        <div className="mb-6 rounded-xl border border-surface-200 bg-white p-3">
+                            <img
+                                src={`/${question.image_path}`}
+                                alt={`Soal ${currentQuestion + 1}`}
+                                className="w-full max-h-80 object-contain rounded-lg"
+                            />
+                        </div>
+                    )}
 
                     {question.type === "multiple_choice" && (
                         <div className="space-y-3">
@@ -277,6 +297,17 @@ export default function ExamTake({
                                 </button>
                             ))}
                         </div>
+                    )}
+
+                    {question.type === "essay" && (
+                        <textarea
+                            value={answers[question.id] ?? ""}
+                            onChange={(e) =>
+                                setAnswer(question.id, e.target.value)
+                            }
+                            className="w-full min-h-36 rounded-xl border-2 border-surface-200 focus:border-primary-400 focus:ring-0"
+                            placeholder="Tulis jawaban kamu di sini..."
+                        />
                     )}
 
                     {question.type === "drag_drop" && (

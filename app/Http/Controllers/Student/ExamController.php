@@ -56,6 +56,9 @@ class ExamController extends Controller
                     }
                     $score += (int) round(($correctCount / max($totalItems, 1)) * $question->points);
                 }
+            } elseif ($question->type === 'essay') {
+                // Essay answers are stored for review but are not auto-graded.
+                continue;
             }
         }
 
