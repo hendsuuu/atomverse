@@ -698,7 +698,7 @@ export default function MaterialShow({
 function renderInlineMaterialGame(materialSlug: string, sectionSlug: string) {
     if (
         materialSlug === "perkembangan-model-atom" &&
-        sectionSlug === "niels-bohr-orbit"
+        sectionSlug === "5-teori-atom-mekanika-kuantum"
     ) {
         return (
             <div className="mt-10">
