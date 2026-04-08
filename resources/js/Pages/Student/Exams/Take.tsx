@@ -169,7 +169,7 @@ export default function ExamTake({
                         </button>
 
                         <Link
-                            href={`/courses/${exam.course.slug}`}
+                            href={`/tes`}
                             className="btn-ghost mt-3 w-full block text-center"
                         >
                             ← Kembali ke Kelas

@@ -265,7 +265,7 @@ export default function ExamResult({ attempt }: Props) {
                         Ulangi Ujian
                     </Link>
                     <Link
-                        href={`/courses/${exam.course.slug}`}
+                        href={`/tes`}
                         className="btn-secondary flex-1 text-center"
                     >
                         Kembali ke Kelas
