@@ -172,7 +172,7 @@ export default function ExamTake({
                             href={`/tes`}
                             className="btn-ghost mt-3 w-full block text-center"
                         >
-                            ← Kembali ke Kelas
+                            ← Kembali
                         </Link>
                     </div>
                 </div>

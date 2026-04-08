@@ -268,7 +268,7 @@ export default function ExamResult({ attempt }: Props) {
                         href={`/tes`}
                         className="btn-secondary flex-1 text-center"
                     >
-                        Kembali ke Kelas
+                        Kembali
                     </Link>
                     <Link
                         href="/dashboard"
