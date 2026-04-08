@@ -50,7 +50,9 @@ export default function QuizTake({
     const [started, setStarted] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [answers, setAnswers] = useState<Record<number, any>>({});
-    const [feedbackVisible, setFeedbackVisible] = useState<Record<number, boolean>>({});
+    const [feedbackVisible, setFeedbackVisible] = useState<
+        Record<number, boolean>
+    >({});
     const [submitting, setSubmitting] = useState(false);
     const [timeLeft, setTimeLeft] = useState(
         quiz.time_limit_minutes ? quiz.time_limit_minutes * 60 : null,
@@ -316,7 +318,11 @@ export default function QuizTake({
                             <button
                                 type="button"
                                 className="btn-secondary"
-                                disabled={!answers[question.id] || (typeof answers[question.id] === 'string' && answers[question.id].trim() === '')}
+                                disabled={
+                                    !answers[question.id] ||
+                                    (typeof answers[question.id] === "string" &&
+                                        answers[question.id].trim() === "")
+                                }
                                 onClick={() =>
                                     setFeedbackVisible((prev) => ({
                                         ...prev,
@@ -344,7 +350,8 @@ export default function QuizTake({
                     {feedbackVisible[question.id] &&
                         question.type === "multiple_choice" &&
                         (() => {
-                            const status = resolveMultipleChoiceStatus(question);
+                            const status =
+                                resolveMultipleChoiceStatus(question);
 
                             if (!status) {
                                 return null;

@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { type ReactNode } from "react";
 
 interface AuthLayoutProps {
     children: ReactNode;
@@ -23,17 +23,20 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
                             className="w-12 h-12 object-contain"
                         />
                     </div>
-                    <h1 className="text-2xl font-bold text-surface-900">Atomverse</h1>
-                    <p className="text-surface-500 mt-1">Modern Learning Platform</p>
+                    <h1 className="text-2xl font-bold text-surface-900">
+                        Atomverse
+                    </h1>
+                    <p className="text-surface-500 mt-1">
+                        Modern Learning Platform
+                    </p>
                 </div>
 
                 {/* Card */}
-                <div className="card p-6 sm:p-8 shadow-lg">
-                    {children}
-                </div>
+                <div className="card p-6 sm:p-8 shadow-lg">{children}</div>
 
                 <p className="text-center text-xs text-surface-400 mt-6">
-                    &copy; {new Date().getFullYear()} Atomverse. All rights reserved.
+                    &copy; {new Date().getFullYear()} Atomverse. All rights
+                    reserved.
                 </p>
             </div>
         </div>

@@ -22,7 +22,7 @@ export default function Welcome() {
                     }
                 });
             },
-            { threshold: 0.1 }
+            { threshold: 0.1 },
         );
 
         const elements = document.querySelectorAll(".reveal");
@@ -330,15 +330,19 @@ export default function Welcome() {
                             <h1 className="font-fraunces mb-5 text-[clamp(2.3rem,4.2vw,3.6rem)] font-extrabold leading-[1.15] text-[#082544]">
                                 Jelajahi Dunia
                                 <br />
-                                <em className="not-italic text-[#1B7FE8]">Atom</em>, Kuasai
+                                <em className="not-italic text-[#1B7FE8]">
+                                    Atom
+                                </em>
+                                , Kuasai
                                 <br />
                                 Ilmu Sains
                             </h1>
 
                             <p className="mb-9 max-w-[500px] text-[1.02rem] leading-relaxed text-[#3E546A]">
-                                AtomVerse menghadirkan pengalaman belajar yang interaktif,
-                                terstruktur, dan menyenangkan — dirancang khusus untuk
-                                membantumu memahami ilmu sains dari dasar hingga mahir.
+                                AtomVerse menghadirkan pengalaman belajar yang
+                                interaktif, terstruktur, dan menyenangkan —
+                                dirancang khusus untuk membantumu memahami ilmu
+                                sains dari dasar hingga mahir.
                             </p>
 
                             <div className="mb-12 flex flex-wrap gap-3.5">
@@ -387,7 +391,7 @@ export default function Welcome() {
                             </div> */}
                         </div>
 
-                       <div
+                        <div
                             className="reveal relative h-[calc(100vh-68px)]"
                             style={{ transitionDelay: "0.15s" }}
                         >
@@ -447,7 +451,9 @@ export default function Welcome() {
 
                             <div className="mt-9 grid grid-cols-1 gap-3.5 sm:grid-cols-2">
                                 <div className="rounded-lg border border-[#C6DFF6] bg-white p-5 transition-shadow hover:shadow-[0_4px_20px_rgba(27,127,232,0.1)]">
-                                    <div className="mb-2.5 text-[1.4rem]">🔵</div>
+                                    <div className="mb-2.5 text-[1.4rem]">
+                                        🔵
+                                    </div>
                                     <h4 className="mb-1 text-[0.875rem] font-bold text-[#082544]">
                                         Proton
                                     </h4>
@@ -459,7 +465,9 @@ export default function Welcome() {
                                 </div>
 
                                 <div className="rounded-lg border border-[#C6DFF6] bg-white p-5 transition-shadow hover:shadow-[0_4px_20px_rgba(27,127,232,0.1)]">
-                                    <div className="mb-2.5 text-[1.4rem]">⚪</div>
+                                    <div className="mb-2.5 text-[1.4rem]">
+                                        ⚪
+                                    </div>
                                     <h4 className="mb-1 text-[0.875rem] font-bold text-[#082544]">
                                         Neutron
                                     </h4>
@@ -470,7 +478,9 @@ export default function Welcome() {
                                 </div>
 
                                 <div className="rounded-lg border border-[#C6DFF6] bg-white p-5 transition-shadow hover:shadow-[0_4px_20px_rgba(27,127,232,0.1)]">
-                                    <div className="mb-2.5 text-[1.4rem]">🟡</div>
+                                    <div className="mb-2.5 text-[1.4rem]">
+                                        🟡
+                                    </div>
                                     <h4 className="mb-1 text-[0.875rem] font-bold text-[#082544]">
                                         Elektron
                                     </h4>
@@ -482,7 +492,9 @@ export default function Welcome() {
                                 </div>
 
                                 <div className="rounded-lg border border-[#C6DFF6] bg-white p-5 transition-shadow hover:shadow-[0_4px_20px_rgba(27,127,232,0.1)]">
-                                    <div className="mb-2.5 text-[1.4rem]">🔬</div>
+                                    <div className="mb-2.5 text-[1.4rem]">
+                                        🔬
+                                    </div>
                                     <h4 className="mb-1 text-[0.875rem] font-bold text-[#082544]">
                                         Kulit Atom
                                     </h4>
@@ -545,7 +557,12 @@ export default function Welcome() {
                                     transform="rotate(-60 210 185)"
                                 />
 
-                                <circle cx="210" cy="185" r="36" fill="#082544" />
+                                <circle
+                                    cx="210"
+                                    cy="185"
+                                    r="36"
+                                    fill="#082544"
+                                />
                                 <circle
                                     cx="201"
                                     cy="177"
@@ -757,11 +774,36 @@ export default function Welcome() {
                             <div className="absolute left-[14%] right-[14%] top-[27px] hidden h-[2px] bg-[#C6DFF6] md:block"></div>
 
                             {[
-                                ["01", "Buka Menu Utama", "Setelah login, halaman pertama yang tampil adalah Menu Utama dengan tujuh menu pembelajaran.", "#082544"],
-                                ["02", "Pelajari Materi", "Buka menu Materi untuk membaca isi pembelajaran dan memainkan game interaktif di dalamnya.", "#1B7FE8"],
-                                ["03", "Kerjakan Latihan", "Setelah memahami materi, buka menu Latihan Soal atau kerjakan kuis di akhir halaman materi.", "#1B7FE8"],
-                                ["04", "Selesaikan Tes", "Masuk ke menu Tes untuk mengerjakan evaluasi dengan soal yang lebih banyak hingga selesai.", "#1B7FE8"],
-                                ["05", "Pantau Riwayat", "Buka Riwayat Belajar untuk melihat hasil latihan soal dan tes yang sudah kamu kerjakan.", "#0D5CB3"],
+                                [
+                                    "01",
+                                    "Buka Menu Utama",
+                                    "Setelah login, halaman pertama yang tampil adalah Menu Utama dengan tujuh menu pembelajaran.",
+                                    "#082544",
+                                ],
+                                [
+                                    "02",
+                                    "Pelajari Materi",
+                                    "Buka menu Materi untuk membaca isi pembelajaran dan memainkan game interaktif di dalamnya.",
+                                    "#1B7FE8",
+                                ],
+                                [
+                                    "03",
+                                    "Kerjakan Latihan",
+                                    "Setelah memahami materi, buka menu Latihan Soal atau kerjakan kuis di akhir halaman materi.",
+                                    "#1B7FE8",
+                                ],
+                                [
+                                    "04",
+                                    "Selesaikan Tes",
+                                    "Masuk ke menu Tes untuk mengerjakan evaluasi dengan soal yang lebih banyak hingga selesai.",
+                                    "#1B7FE8",
+                                ],
+                                [
+                                    "05",
+                                    "Pantau Riwayat",
+                                    "Buka Riwayat Belajar untuk melihat hasil latihan soal dan tes yang sudah kamu kerjakan.",
+                                    "#0D5CB3",
+                                ],
                             ].map(([num, title, desc, bg], idx) => (
                                 <div
                                     key={num}
@@ -914,9 +956,9 @@ export default function Welcome() {
                         </h2>
 
                         <p className="mx-auto mb-9 max-w-[600px] text-base leading-[1.75] text-[#7FAACC]">
-                            Bergabunglah bersama pelajar aktif lainnya.
-                            Dapatkan akses penuh ke seluruh materi dan komunitas yang mendukungmu
-                            berkembang.
+                            Bergabunglah bersama pelajar aktif lainnya. Dapatkan
+                            akses penuh ke seluruh materi dan komunitas yang
+                            mendukungmu berkembang.
                         </p>
 
                         <ul className="mb-12 flex list-none flex-wrap justify-center gap-x-7 gap-y-3">
@@ -1000,7 +1042,9 @@ export default function Welcome() {
 
                                     <div
                                         className={`border-t border-[#EEF3F8] px-6 pb-5 text-[0.9rem] leading-[1.75] text-[#3E546A] ${
-                                            openFaqIndex === i ? "block" : "hidden"
+                                            openFaqIndex === i
+                                                ? "block"
+                                                : "hidden"
                                         }`}
                                     >
                                         {faq.a}
@@ -1071,7 +1115,6 @@ export default function Welcome() {
                                 </ul>
                             </div>
 
-
                             <div>
                                 <h4 className="mb-4 text-[0.78rem] font-bold uppercase tracking-wider text-white">
                                     Dukungan
@@ -1118,7 +1161,9 @@ export default function Welcome() {
                                 © {new Date().getFullYear()} AtomVerse. Hak
                                 cipta dilindungi undang-undang.
                             </span>
-                            <span>Dibuat dengan ❤️ untuk pelajar Indonesia</span>
+                            <span>
+                                Dibuat dengan ❤️ untuk pelajar Indonesia
+                            </span>
                         </div>
                     </div>
                 </footer>

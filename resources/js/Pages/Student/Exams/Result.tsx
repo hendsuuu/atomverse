@@ -266,13 +266,24 @@ export default function ExamResult({ attempt }: Props) {
                                 {question.type === "essay" && (
                                     <div className="ml-10 space-y-2 text-sm">
                                         <div className="rounded-lg bg-surface-50 p-3 text-surface-700">
-                                            <p className="font-medium mb-1">Jawaban kamu:</p>
-                                            <p>{(userAnswer as string) || "Belum dijawab."}</p>
+                                            <p className="font-medium mb-1">
+                                                Jawaban kamu:
+                                            </p>
+                                            <p>
+                                                {(userAnswer as string) ||
+                                                    "Belum dijawab."}
+                                            </p>
                                         </div>
                                         {question.correct_answer && (
                                             <div className="rounded-lg bg-success-50 p-3 text-success-800">
-                                                <p className="font-medium mb-1">Kunci/Referensi Jawaban:</p>
-                                                <p>{question.correct_answer as string}</p>
+                                                <p className="font-medium mb-1">
+                                                    Kunci/Referensi Jawaban:
+                                                </p>
+                                                <p>
+                                                    {
+                                                        question.correct_answer as string
+                                                    }
+                                                </p>
                                             </div>
                                         )}
                                     </div>
