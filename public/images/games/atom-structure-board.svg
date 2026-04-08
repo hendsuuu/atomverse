@@ -1,0 +1,24 @@
+<svg width="1200" height="1200" viewBox="0 0 1200 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="1200" rx="80" fill="#F8FBFF"/>
+  <circle cx="600" cy="600" r="430" stroke="#BFDBFE" stroke-width="6" stroke-dasharray="12 16"/>
+  <circle cx="600" cy="600" r="305" stroke="#93C5FD" stroke-width="5" stroke-dasharray="10 14"/>
+  <circle cx="600" cy="600" r="175" stroke="#60A5FA" stroke-width="4" stroke-dasharray="8 12"/>
+  <circle cx="600" cy="600" r="135" fill="url(#coreGlow)"/>
+  <circle cx="548" cy="572" r="54" fill="#F87171"/>
+  <circle cx="652" cy="640" r="54" fill="#93C5FD"/>
+  <circle cx="618" cy="534" r="54" fill="#FCD34D"/>
+  <circle cx="930" cy="285" r="44" fill="#1D4ED8" fill-opacity="0.12"/>
+  <circle cx="930" cy="285" r="18" fill="#2563EB"/>
+  <circle cx="352" cy="894" r="32" fill="#0EA5E9" fill-opacity="0.15"/>
+  <circle cx="352" cy="894" r="12" fill="#0284C7"/>
+  <circle cx="208" cy="516" r="24" fill="#38BDF8" fill-opacity="0.15"/>
+  <circle cx="208" cy="516" r="9" fill="#0284C7"/>
+  <path d="M177 272C244 182 355 120 480 120H720C845 120 956 182 1023 272" stroke="#E0F2FE" stroke-width="12" stroke-linecap="round"/>
+  <path d="M177 928C244 1018 355 1080 480 1080H720C845 1080 956 1018 1023 928" stroke="#E0F2FE" stroke-width="12" stroke-linecap="round"/>
+  <defs>
+    <radialGradient id="coreGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(600 600) rotate(90) scale(170)">
+      <stop stop-color="#FDE68A"/>
+      <stop offset="1" stop-color="#F59E0B" stop-opacity="0.18"/>
+    </radialGradient>
+  </defs>
+</svg>

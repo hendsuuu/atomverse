@@ -31,6 +31,7 @@ class MaterialController extends Controller
 
         // Get quizzes for this material
         $quizzes = Quiz::where('material_id', $material->id)
+            ->whereHas('questions', fn ($query) => $query->where('type', 'multiple_choice'))
             ->withCount('questions')
             ->get()
             ->map(function ($quiz) use ($user) {
@@ -47,7 +48,6 @@ class MaterialController extends Controller
                     'questions_count' => $quiz->questions_count,
                     'passing_score' => $quiz->passing_score,
                     'time_limit_minutes' => $quiz->time_limit_minutes,
-                    'has_drag_drop' => $quiz->questions()->where('type', 'drag_drop')->exists(),
                     'best_score' => $bestAttempt ? [
                         'score' => $bestAttempt->score,
                         'total_points' => $bestAttempt->total_points,

@@ -188,7 +188,7 @@ export default function QuizResult({ attempt }: Props) {
                         Kembali ke Materi
                     </Link>
                     <Link href="/dashboard" className="btn-ghost flex-1 text-center">
-                        Dashboard
+                        Menu Utama
                     </Link>
                 </div>
             </div>

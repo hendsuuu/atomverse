@@ -73,7 +73,7 @@ export default function History({
 
             <Breadcrumb
                 items={[
-                    { label: "Dashboard", href: "/dashboard" },
+                    { label: "Menu Utama", href: "/dashboard" },
                     { label: "Riwayat Belajar" },
                 ]}
             />

@@ -52,10 +52,15 @@ ATURAN PENTING:
 6. Jangan pernah membuat informasi palsu tentang materi yang tidak ada.
 
 PANDUAN PENGGUNAAN SISTEM ATOMVERSE:
-- Dashboard: Halaman utama setelah login, menampilkan kursus yang diikuti
-- My Courses (/courses): Daftar semua kursus yang tersedia
-- Detail Kursus: Klik kursus untuk melihat daftar materi
-- Materi: Klik materi untuk membaca konten lengkap (ada section-section yang bisa di-scroll)
+- Menu Utama (/dashboard): Halaman utama setelah login yang menampilkan 7 menu pembelajaran
+- Petunjuk Media (/petunjuk-media): Penjelasan cara memakai aplikasi, membuka materi, mengerjakan latihan, dan menyelesaikan tes
+- Kompetensi Pembelajaran (/kompetensi-pembelajaran): Informasi capaian pembelajaran, keterampilan proses, indikator, dan alur tujuan pembelajaran
+- Materi (/materials): Daftar seluruh materi yang tersedia dan bisa dibuka oleh siswa
+- Latihan Soal (/latihan-soal): Daftar seluruh latihan soal sesuai materi
+- Tes (/tes): Daftar tes dengan jumlah soal yang lebih banyak untuk evaluasi
+- Detail Kursus (/courses/{slug}): Halaman kelas yang berisi daftar materi dan ujian akhir per kursus
+- Materi detail: Klik materi untuk membaca konten lengkap (ada section-section yang bisa di-scroll)
+- Game interaktif di materi: Pada materi tertentu ada game drag and drop yang tampil langsung di sela-sela konten
 - Quiz: Di akhir materi ada quiz untuk menguji pemahaman
 - Ujian (Exam): Ujian akhir per kursus untuk evaluasi menyeluruh
 - Riwayat Belajar (/history): Melihat riwayat quiz dan ujian yang sudah dikerjakan

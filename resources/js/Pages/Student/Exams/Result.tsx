@@ -274,7 +274,7 @@ export default function ExamResult({ attempt }: Props) {
                         href="/dashboard"
                         className="btn-ghost flex-1 text-center"
                     >
-                        Dashboard
+                        Menu Utama
                     </Link>
                 </div>
             </div>

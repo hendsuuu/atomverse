@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Head, Link } from "@inertiajs/react";
 import Breadcrumb from "@/Components/Breadcrumb";
 import ContentBlockRenderer from "@/Components/ContentBlockRenderer";
+import AtomModelDiscoveryGame from "@/Components/AtomModelDiscoveryGame";
+import SubatomicStructureGame from "@/Components/SubatomicStructureGame";
 import type { Material, MaterialSection } from "@/types";
 import ChatBot from "@/Components/ChatBot";
 
@@ -12,7 +14,6 @@ interface QuizInfo {
     questions_count: number;
     passing_score: number;
     time_limit_minutes: number | null;
-    has_drag_drop: boolean;
     best_score: {
         score: number;
         total_points: number;
@@ -117,7 +118,7 @@ export default function MaterialShow({
                     <div className="flex items-center justify-between h-14">
                         <div className="flex items-center gap-3 min-w-0">
                             <Link
-                                href={`/courses/${material.course.slug}`}
+                                href={`/dashboard`}
                                 className="p-1.5 rounded-lg hover:bg-surface-100 text-surface-500 flex-shrink-0"
                             >
                                 <svg
@@ -175,7 +176,7 @@ export default function MaterialShow({
                         {/* Breadcrumb */}
                         <Breadcrumb
                             items={[
-                                { label: "Courses", href: "/courses" },
+                                { label: "Menu Utama", href: "/dashboard" },
                                 {
                                     label: material.course.title,
                                     href: `/courses/${material.course.slug}`,
@@ -271,6 +272,11 @@ export default function MaterialShow({
                                     <ContentBlockRenderer
                                         blocks={section.blocks || []}
                                     />
+
+                                    {renderInlineMaterialGame(
+                                        material.slug,
+                                        section.slug,
+                                    )}
                                 </section>
                             ))}
                         </div>
@@ -280,11 +286,11 @@ export default function MaterialShow({
                             <div className="mt-16 pt-10 border-t border-surface-200">
                                 <h2 className="text-2xl font-bold text-surface-900 mb-2 flex items-center gap-3">
                                     <span className="w-1 h-7 rounded-full bg-accent-500 flex-shrink-0" />
-                                    Latihan & Game Interaktif
+                                    Latihan Soal
                                 </h2>
                                 <p className="text-surface-500 mb-6">
-                                    Uji pemahamanmu dengan mengerjakan quiz dan
-                                    game berikut.
+                                    Uji pemahamanmu dengan mengerjakan latihan
+                                    soal berikut.
                                 </p>
                                 <div className="grid gap-4 sm:grid-cols-2">
                                     {quizzes.map((quiz) => (
@@ -295,41 +301,22 @@ export default function MaterialShow({
                                         >
                                             {/* Type badge */}
                                             <div className="flex items-center gap-2 mb-3">
-                                                {quiz.has_drag_drop ? (
-                                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-50 text-purple-700 text-xs font-semibold">
-                                                        <svg
-                                                            className="w-3.5 h-3.5"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            stroke="currentColor"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth={2}
-                                                                d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-                                                            />
-                                                        </svg>
-                                                        Drag & Drop Game
-                                                    </span>
-                                                ) : (
-                                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-semibold">
-                                                        <svg
-                                                            className="w-3.5 h-3.5"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            stroke="currentColor"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth={2}
-                                                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                                                            />
-                                                        </svg>
-                                                        Quiz Pilihan Ganda
-                                                    </span>
-                                                )}
+                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-semibold">
+                                                    <svg
+                                                        className="w-3.5 h-3.5"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                                                        />
+                                                    </svg>
+                                                    Quiz Pilihan Ganda
+                                                </span>
                                             </div>
 
                                             {/* Title */}
@@ -514,7 +501,7 @@ export default function MaterialShow({
                                 </nav>
                             </div>
 
-                            {/* Quiz & Games shortcut */}
+                            {/* Quiz shortcut */}
                             {quizzes.length > 0 && (
                                 <div className="card p-4 mt-4">
                                     <h3 className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-3">
@@ -528,17 +515,14 @@ export default function MaterialShow({
                                                 className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-surface-500 hover:text-surface-900 hover:bg-surface-50 transition-colors"
                                             >
                                                 <span className="flex-shrink-0">
-                                                    {quiz.has_drag_drop
-                                                        ? "🎮"
-                                                        : "📝"}
+                                                    📝
                                                 </span>
                                                 <span className="truncate">
                                                     {quiz.title
                                                         .replace(
                                                             "Latihan Soal: ",
                                                             "",
-                                                        )
-                                                        .replace("Game: ", "")}
+                                                        )}
                                                 </span>
                                                 {quiz.best_score?.passed && (
                                                     <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 text-xs">
@@ -645,12 +629,12 @@ export default function MaterialShow({
                                 ))}
                             </nav>
 
-                            {/* Quiz & Games in mobile drawer */}
+                            {/* Quiz in mobile drawer */}
                             {quizzes.length > 0 && (
                                 <>
                                     <hr className="my-4 border-surface-200" />
                                     <h4 className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-2 px-4">
-                                        Latihan & Game
+                                        Latihan Soal
                                     </h4>
                                     <nav className="space-y-0.5">
                                         {quizzes.map((quiz) => (
@@ -659,18 +643,13 @@ export default function MaterialShow({
                                                 href={`/quizzes/${quiz.id}`}
                                                 className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-surface-600 hover:bg-surface-50"
                                             >
-                                                <span>
-                                                    {quiz.has_drag_drop
-                                                        ? "🎮"
-                                                        : "📝"}
-                                                </span>
+                                                <span>📝</span>
                                                 <span className="flex-1">
                                                     {quiz.title
                                                         .replace(
                                                             "Latihan Soal: ",
                                                             "",
-                                                        )
-                                                        .replace("Game: ", "")}
+                                                        )}
                                                 </span>
                                                 {quiz.best_score?.passed && (
                                                     <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs">
@@ -714,4 +693,27 @@ export default function MaterialShow({
             </div>
         </div>
     );
+}
+
+function renderInlineMaterialGame(materialSlug: string, sectionSlug: string) {
+    if (
+        materialSlug === "perkembangan-model-atom" &&
+        sectionSlug === "niels-bohr-orbit"
+    ) {
+        return (
+            <div className="mt-10">
+                <AtomModelDiscoveryGame />
+            </div>
+        );
+    }
+
+    if (materialSlug === "partikel-penyusun-atom" && sectionSlug === "neutron") {
+        return (
+            <div className="mt-10">
+                <SubatomicStructureGame />
+            </div>
+        );
+    }
+
+    return null;
 }

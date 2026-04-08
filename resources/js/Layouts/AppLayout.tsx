@@ -31,8 +31,10 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
     }, []);
 
     const navItems = [
-        { name: "Dashboard", href: "/dashboard" },
-        { name: "My Courses", href: "/courses" },
+        { name: "Menu Utama", href: "/dashboard" },
+        { name: "Materi", href: "/materials" },
+        { name: "Latihan Soal", href: "/latihan-soal" },
+        { name: "Tes", href: "/tes" },
     ];
 
     return (
@@ -113,26 +115,6 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
                                             {user.email}
                                         </p>
                                     </div>
-                                    <Link
-                                        href="/history"
-                                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-surface-700 hover:bg-surface-50 transition-colors"
-                                        onClick={() => setProfileOpen(false)}
-                                    >
-                                        <svg
-                                            className="w-4 h-4 text-surface-400"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                                            />
-                                        </svg>
-                                        Riwayat Belajar
-                                    </Link>
                                     <div className="border-t border-surface-100">
                                         <Link
                                             href="/logout"

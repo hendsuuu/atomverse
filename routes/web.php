@@ -14,6 +14,7 @@ use App\Http\Controllers\Student\CourseController as StudentCourseController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Student\ExamController as StudentExamController;
 use App\Http\Controllers\Student\HistoryController;
+use App\Http\Controllers\Student\LearningMenuController;
 use App\Http\Controllers\Student\MaterialController as StudentMaterialController;
 use App\Http\Controllers\Student\QuizController as StudentQuizController;
 use App\Http\Controllers\Student\ChatbotController;
@@ -98,6 +99,12 @@ Route::middleware(['auth', 'role:user'])
     ->name('student.')
     ->group(function () {
         Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/petunjuk-media', [LearningMenuController::class, 'mediaGuide'])->name('media-guide');
+        Route::get('/kompetensi-pembelajaran', [LearningMenuController::class, 'competencies'])->name('competencies');
+        Route::get('/materials', [LearningMenuController::class, 'materials'])->name('materials.index');
+        Route::get('/latihan-soal', [LearningMenuController::class, 'practice'])->name('practice.index');
+        Route::get('/tes', [LearningMenuController::class, 'tests'])->name('tests.index');
+        Route::get('/profil-pengembang', [LearningMenuController::class, 'developerProfile'])->name('developer-profile');
 
         Route::get('/courses', [StudentCourseController::class, 'index'])->name('courses.index');
         Route::get('/courses/{course:slug}', [StudentCourseController::class, 'show'])->name('courses.show');

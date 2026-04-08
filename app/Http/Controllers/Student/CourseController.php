@@ -27,7 +27,10 @@ class CourseController extends Controller
     public function show(Course $course)
     {
         $course->load([
-            'materials' => fn ($q) => $q->published()->orderBy('sort_order')->withCount('quizzes'),
+            'materials' => fn ($q) => $q->published()->orderBy('sort_order')->withCount([
+                'quizzes as quizzes_count' => fn ($query) => $query
+                    ->whereHas('questions', fn ($questionQuery) => $questionQuery->where('type', 'multiple_choice')),
+            ]),
             'creator:id,name',
             'exams' => fn ($q) => $q->withCount('questions'),
         ]);
