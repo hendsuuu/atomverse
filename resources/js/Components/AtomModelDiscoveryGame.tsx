@@ -67,9 +67,8 @@ export default function AtomModelDiscoveryGame() {
     const [mapping, setMapping] = useState<Partial<Record<ModelId, Scientist>>>(
         {},
     );
-    const [selectedScientist, setSelectedScientist] = useState<Scientist | null>(
-        null,
-    );
+    const [selectedScientist, setSelectedScientist] =
+        useState<Scientist | null>(null);
     const [draggedScientist, setDraggedScientist] = useState<Scientist | null>(
         null,
     );
@@ -83,7 +82,8 @@ export default function AtomModelDiscoveryGame() {
     const progress = Object.keys(mapping).length;
     const correctCount = useMemo(
         () =>
-            modelCards.filter((card) => mapping[card.id] === card.scientist).length,
+            modelCards.filter((card) => mapping[card.id] === card.scientist)
+                .length,
         [mapping],
     );
     const isCompleted = progress === modelCards.length;
@@ -137,10 +137,14 @@ export default function AtomModelDiscoveryGame() {
                             <button
                                 key={scientist}
                                 draggable
-                                onDragStart={() => setDraggedScientist(scientist)}
+                                onDragStart={() =>
+                                    setDraggedScientist(scientist)
+                                }
                                 onClick={() =>
                                     setSelectedScientist((current) =>
-                                        current === scientist ? null : scientist,
+                                        current === scientist
+                                            ? null
+                                            : scientist,
                                     )
                                 }
                                 className={`rounded-2xl border px-3.5 py-2.5 text-sm font-semibold transition-all ${
@@ -176,12 +180,18 @@ export default function AtomModelDiscoveryGame() {
                                 onDragLeave={() => setActiveTarget(null)}
                                 onDrop={() => {
                                     if (draggedScientist) {
-                                        assignScientist(draggedScientist, card.id);
+                                        assignScientist(
+                                            draggedScientist,
+                                            card.id,
+                                        );
                                     }
                                 }}
                                 onClick={() => {
                                     if (selectedScientist) {
-                                        assignScientist(selectedScientist, card.id);
+                                        assignScientist(
+                                            selectedScientist,
+                                            card.id,
+                                        );
                                     }
                                 }}
                                 className={`rounded-[1.6rem] border-2 bg-white p-4 transition-all ${
@@ -206,7 +216,9 @@ export default function AtomModelDiscoveryGame() {
                                                 {card.title}
                                             </h4>
                                         </div>
-                                        <AtomModelIllustration model={card.id} />
+                                        <AtomModelIllustration
+                                            model={card.id}
+                                        />
                                     </div>
                                 </div>
 
@@ -232,7 +244,9 @@ export default function AtomModelDiscoveryGame() {
                                                             : "bg-rose-100 text-rose-700"
                                                     }`}
                                                 >
-                                                    {isCorrect ? "Benar" : "Coba lagi"}
+                                                    {isCorrect
+                                                        ? "Benar"
+                                                        : "Coba lagi"}
                                                 </span>
                                                 <button
                                                     type="button"
@@ -248,7 +262,9 @@ export default function AtomModelDiscoveryGame() {
                                         </>
                                     ) : (
                                         <p className="text-sm font-medium text-surface-400">
-                                            {activeTarget === card.id ? "Lepas di sini" : "Taruh nama di sini"}
+                                            {activeTarget === card.id
+                                                ? "Lepas di sini"
+                                                : "Taruh nama di sini"}
                                         </p>
                                     )}
                                 </div>
