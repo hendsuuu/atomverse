@@ -4,9 +4,10 @@ type Scientist =
     | "John Dalton"
     | "J.J. Thomson"
     | "Ernest Rutherford"
-    | "Niels Bohr";
+    | "Niels Bohr"
+    | "Erwin Schrödinger";
 
-type ModelId = "dalton" | "thomson" | "rutherford" | "bohr";
+type ModelId = "dalton" | "thomson" | "rutherford" | "bohr" | "quantum";
 
 interface ModelCard {
     id: ModelId;
@@ -21,6 +22,7 @@ const scientists: Scientist[] = [
     "J.J. Thomson",
     "Ernest Rutherford",
     "Niels Bohr",
+    "Erwin Schrödinger",
 ];
 
 const modelCards: ModelCard[] = [
@@ -29,28 +31,35 @@ const modelCards: ModelCard[] = [
         title: "Model Bola Biliar",
         year: "1803",
         scientist: "John Dalton",
-        accent: "from-slate-700 via-slate-800 to-slate-900",
+        accent: "from-blue-600 via-blue-700 to-blue-800",
     },
     {
         id: "thomson",
         title: "Model Roti Kismis",
         year: "1897",
         scientist: "J.J. Thomson",
-        accent: "from-amber-500 via-orange-500 to-rose-500",
+        accent: "from-red-500 via-red-600 to-red-700",
     },
     {
         id: "rutherford",
         title: "Model Atom Inti",
         year: "1911",
         scientist: "Ernest Rutherford",
-        accent: "from-emerald-500 via-teal-500 to-cyan-500",
+        accent: "from-gray-100 via-gray-200 to-gray-300",
     },
     {
         id: "bohr",
         title: "Model Atom Orbit",
         year: "1913",
         scientist: "Niels Bohr",
-        accent: "from-indigo-500 via-blue-600 to-sky-600",
+        accent: "from-cyan-300 via-cyan-400 to-cyan-500",
+    },
+    {
+        id: "quantum",
+        title: "Model Mekanika Kuantum",
+        year: "1926",
+        scientist: "Erwin Schrödinger",
+        accent: "from-blue-300 via-blue-400 to-blue-500",
     },
 ];
 
@@ -275,127 +284,19 @@ export default function AtomModelDiscoveryGame() {
 }
 
 function AtomModelIllustration({ model }: { model: ModelId }) {
-    if (model === "dalton") {
-        return (
-            <svg
-                viewBox="0 0 120 120"
-                className="h-20 w-20 shrink-0 drop-shadow-[0_14px_24px_rgba(15,23,42,0.28)] sm:h-24 sm:w-24"
-                aria-hidden="true"
-            >
-                <defs>
-                    <radialGradient id="dalton-core" cx="35%" cy="35%" r="65%">
-                        <stop offset="0%" stopColor="rgba(255,255,255,0.92)" />
-                        <stop offset="100%" stopColor="rgba(255,255,255,0.18)" />
-                    </radialGradient>
-                </defs>
-                <circle cx="60" cy="60" r="42" fill="url(#dalton-core)" />
-                <circle
-                    cx="60"
-                    cy="60"
-                    r="42"
-                    fill="none"
-                    stroke="rgba(255,255,255,0.55)"
-                    strokeWidth="2.5"
-                />
-            </svg>
-        );
-    }
-
-    if (model === "thomson") {
-        return (
-            <svg
-                viewBox="0 0 120 120"
-                className="h-20 w-20 shrink-0 drop-shadow-[0_14px_24px_rgba(15,23,42,0.28)] sm:h-24 sm:w-24"
-                aria-hidden="true"
-            >
-                <defs>
-                    <radialGradient id="thomson-body" cx="40%" cy="35%" r="70%">
-                        <stop offset="0%" stopColor="#ffe3b3" />
-                        <stop offset="100%" stopColor="#f97316" />
-                    </radialGradient>
-                </defs>
-                <circle cx="60" cy="60" r="42" fill="url(#thomson-body)" />
-                {[
-                    [40, 36],
-                    [74, 40],
-                    [32, 67],
-                    [67, 72],
-                    [55, 54],
-                    [83, 62],
-                ].map(([x, y]) => (
-                    <circle key={`${x}-${y}`} cx={x} cy={y} r="5" fill="#1f2937" />
-                ))}
-            </svg>
-        );
-    }
-
-    if (model === "rutherford") {
-        return (
-            <svg
-                viewBox="0 0 120 120"
-                className="h-20 w-20 shrink-0 drop-shadow-[0_14px_24px_rgba(15,23,42,0.28)] sm:h-24 sm:w-24"
-                aria-hidden="true"
-            >
-                <ellipse
-                    cx="60"
-                    cy="60"
-                    rx="38"
-                    ry="16"
-                    fill="none"
-                    stroke="rgba(255,255,255,0.45)"
-                    strokeWidth="2"
-                />
-                <ellipse
-                    cx="60"
-                    cy="60"
-                    rx="18"
-                    ry="40"
-                    fill="none"
-                    stroke="rgba(255,255,255,0.45)"
-                    strokeWidth="2"
-                    transform="rotate(25 60 60)"
-                />
-                <circle cx="60" cy="60" r="10" fill="#fef08a" />
-                <circle cx="86" cy="59" r="4.5" fill="#ffffff" />
-                <circle cx="53" cy="27" r="4.5" fill="#ffffff" />
-            </svg>
-        );
-    }
+    const imageMap: Record<ModelId, string> = {
+        dalton: "/images/dalton.png",
+        thomson: "/images/thomson.jpg",
+        rutherford: "/images/rutherford.png",
+        bohr: "/images/bohr.png",
+        quantum: "/images/quantum.png",
+    };
 
     return (
-        <svg
-            viewBox="0 0 120 120"
-            className="h-20 w-20 shrink-0 drop-shadow-[0_14px_24px_rgba(15,23,42,0.28)] sm:h-24 sm:w-24"
-            aria-hidden="true"
-        >
-            <circle cx="60" cy="60" r="9" fill="#fde68a" />
-            <circle
-                cx="60"
-                cy="60"
-                r="24"
-                fill="none"
-                stroke="rgba(255,255,255,0.48)"
-                strokeWidth="2"
-            />
-            <circle
-                cx="60"
-                cy="60"
-                r="38"
-                fill="none"
-                stroke="rgba(255,255,255,0.42)"
-                strokeWidth="2"
-            />
-            <circle
-                cx="60"
-                cy="60"
-                r="50"
-                fill="none"
-                stroke="rgba(255,255,255,0.36)"
-                strokeWidth="2"
-            />
-            <circle cx="84" cy="60" r="4.5" fill="#ffffff" />
-            <circle cx="24" cy="60" r="4.5" fill="#ffffff" />
-            <circle cx="60" cy="10" r="4.5" fill="#ffffff" />
-        </svg>
+        <img
+            src={imageMap[model]}
+            alt={`${model} atom model`}
+            className="h-20 w-20 shrink-0 object-cover drop-shadow-[0_14px_24px_rgba(15,23,42,0.28)] sm:h-24 sm:w-24"
+        />
     );
 }
