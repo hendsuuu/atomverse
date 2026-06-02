@@ -15,6 +15,7 @@ export default function ChatBot({ variant = "floating" }: ChatBotProps) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showBubble, setShowBubble] = useState(true);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -27,6 +28,11 @@ export default function ChatBot({ variant = "floating" }: ChatBotProps) {
             inputRef.current.focus();
         }
     }, [open]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setShowBubble(false), 5000);
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -265,45 +271,53 @@ export default function ChatBot({ variant = "floating" }: ChatBotProps) {
     /* ── Floating variant (FAB + popup) ── */
     return (
         <>
-            <button
-                onClick={() => setOpen(!open)}
-                className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 ${
-                    open
-                        ? "bg-surface-700 hover:bg-surface-800 rotate-0"
-                        : "gradient-primary hover:shadow-xl scale-100 hover:scale-105"
-                }`}
-                title="Chat dengan Atom AI"
-            >
-                {open ? (
-                    <svg
-                        className="w-6 h-6 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                        />
-                    </svg>
-                ) : (
-                    <svg
-                        className="w-6 h-6 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                        />
-                    </svg>
+            <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+                {/* Speech bubble */}
+                {!open && showBubble && (
+                    <div className="animate-fade-in">
+                        <div className="relative bg-white rounded-2xl rounded-br-sm px-4 py-2.5 shadow-lg border border-surface-100">
+                            <p className="text-sm font-medium text-surface-700 whitespace-nowrap">
+                                Ada yang bisa saya bantu?
+                            </p>
+                            <div
+                                className="absolute -bottom-2 right-5 w-4 h-4 bg-white border-r border-b border-surface-100 rotate-45"
+                                style={{ clipPath: "polygon(100% 0, 100% 100%, 0 100%)" }}
+                            />
+                        </div>
+                    </div>
                 )}
-            </button>
+
+                {/* FAB Button */}
+                <button
+                    onClick={() => { setOpen(!open); setShowBubble(false); }}
+                    title="Chat dengan Atom AI"
+                    className={`flex items-center rounded-full shadow-lg transition-all duration-300 ${
+                        open
+                            ? "w-14 h-14 justify-center bg-surface-700 hover:bg-surface-800"
+                            : "gap-3 pl-2 pr-5 py-2 gradient-primary hover:scale-105"
+                    }`}
+                    style={!open ? {
+                        boxShadow: "0 0 18px rgba(59,130,246,0.45), 0 8px 24px rgba(0,0,0,0.2)",
+                    } : undefined}
+                >
+                    {open ? (
+                        <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    ) : (
+                        <>
+                            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                                <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73A2 2 0 0 1 12 2M7.5 13A2.5 2.5 0 0 0 5 15.5 2.5 2.5 0 0 0 7.5 18 2.5 2.5 0 0 0 10 15.5 2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0 2.5 2.5 2.5 2.5 0 0 0 2.5-2.5 2.5 2.5 0 0 0-2.5-2.5z" />
+                                </svg>
+                            </div>
+                            <span className="text-white font-semibold text-sm whitespace-nowrap">
+                                AtomVerse Assistant
+                            </span>
+                        </>
+                    )}
+                </button>
+            </div>
 
             {open && (
                 <div

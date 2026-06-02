@@ -96,9 +96,6 @@ export default function MaterialsIndex({ materials }: Props) {
                                     <span className="rounded-full bg-surface-100 px-3 py-1">
                                         {material.sections_count} bagian
                                     </span>
-                                    <span className="rounded-full bg-surface-100 px-3 py-1">
-                                        {material.quizzes_count} latihan
-                                    </span>
                                     {material.estimated_read_time && (
                                         <span className="rounded-full bg-surface-100 px-3 py-1">
                                             {material.estimated_read_time} menit
