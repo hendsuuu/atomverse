@@ -55,7 +55,9 @@ export default function DeveloperProfile() {
                     </div>
 
                     <div className="mt-6 rounded-2xl bg-primary-900 px-5 py-5 text-white">
-                        <p className="text-sm font-semibold">Dosen pembimbing</p>
+                        <p className="text-sm font-semibold">
+                            Dosen pembimbing
+                        </p>
                         <p className="mt-2 text-lg font-bold">
                             M. Muchson, Ph.D.
                         </p>
@@ -105,27 +107,14 @@ export default function DeveloperProfile() {
                         </h2>
                         <div className="mt-5 grid gap-4 sm:grid-cols-2">
                             <a
-                                href="mailto:meyzaaurelya4524@gmail.com"
+                                href="mailto:atomversechemistry@gmail.com"
                                 className="rounded-2xl bg-surface-50 px-4 py-4 transition-colors hover:bg-surface-100"
                             >
                                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-surface-500">
                                     Email
                                 </p>
                                 <p className="mt-2 text-sm font-medium text-surface-900">
-                                    meyzaaurelya4524@gmail.com
-                                </p>
-                            </a>
-                            <a
-                                href="https://instagram.com/mzaaurel"
-                                target="_blank"
-                                rel="noreferrer"
-                                className="rounded-2xl bg-surface-50 px-4 py-4 transition-colors hover:bg-surface-100"
-                            >
-                                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-surface-500">
-                                    Instagram
-                                </p>
-                                <p className="mt-2 text-sm font-medium text-surface-900">
-                                    @mzaaurel
+                                    atomversechemistry@gmail.com
                                 </p>
                             </a>
                         </div>
