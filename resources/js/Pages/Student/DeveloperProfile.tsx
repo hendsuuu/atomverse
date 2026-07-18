@@ -39,19 +39,11 @@ export default function DeveloperProfile() {
                     </p>
 
                     <div className="mt-8 rounded-3xl border border-dashed border-surface-300 bg-surface-50 p-6">
-                        <div className="mx-auto flex h-48 w-48 items-center justify-center rounded-[2rem] bg-[linear-gradient(145deg,#0f172a,#2563eb)] text-white shadow-lg">
-                            <div className="text-center">
-                                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-white/20 bg-white/10 text-2xl font-bold">
-                                    MN
-                                </div>
-                                <p className="mt-4 text-sm font-semibold">
-                                    Foto Pengembang
-                                </p>
-                                <p className="mt-1 text-xs text-white/70">
-                                    Area ini siap diganti dengan foto asli.
-                                </p>
-                            </div>
-                        </div>
+                        <img
+                            src="/images/IMG_2996.PNG"
+                            alt="Foto Meyza Aurelya Nurrahma"
+                            className="mx-auto h-48 w-48 rounded-[2rem] object-cover shadow-lg"
+                        />
                     </div>
 
                     <div className="mt-6 rounded-2xl bg-primary-900 px-5 py-5 text-white">
