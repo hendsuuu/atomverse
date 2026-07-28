@@ -175,12 +175,9 @@ export default function SubatomicStructureGame() {
                                               : "border-dashed border-white/70 bg-white/75 shadow-md"
                                     }`}
                                 >
-                                    <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-surface-500 sm:text-[11px]">
-                                        {zone.expectedParticle}
-                                    </span>
                                     {assignedParticle ? (
                                         <>
-                                            <span className="mt-1 text-xs font-bold text-surface-900 sm:mt-2 sm:text-sm">
+                                            <span className="text-xs font-bold text-surface-900 sm:text-sm">
                                                 {assignedParticle}
                                             </span>
                                             <button
@@ -195,7 +192,7 @@ export default function SubatomicStructureGame() {
                                             </button>
                                         </>
                                     ) : (
-                                        <span className="mt-1 text-[11px] font-medium text-surface-400 sm:mt-2 sm:text-xs">
+                                        <span className="text-[11px] font-medium text-surface-400 sm:text-xs">
                                             {activeZone === zone.id ? "Lepas" : "Taruh"}
                                         </span>
                                     )}
